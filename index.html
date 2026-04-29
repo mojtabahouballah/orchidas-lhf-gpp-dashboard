@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="utf-8">
-<title>ORCHIDAS LHF/GPP Dashboard</title>
+<title>ORCHIDAS Result Dashboard</title>
 
 <link
   rel="stylesheet"
@@ -236,9 +236,11 @@ header p {
         grid-template-columns: 1fr;
         height: auto;
     }
+
     #map {
         height: 420px;
     }
+
     .grid {
         grid-template-columns: 1fr;
     }
@@ -249,8 +251,8 @@ header p {
 <body>
 
 <header>
-    <h1>ORCHIDAS LHF/GPP Dashboard</h1>
-    <p>Interactive site map with ensemble and per-run plots generated from ORCHIDAS NetCDF outputs.</p>
+    <h1>ORCHIDAS Result Dashboard</h1>
+    <p>Interactive site map with LHF/GPP and LAI/AGB plots generated from ORCHIDAS NetCDF outputs.</p>
 </header>
 
 <div class="layout">
@@ -270,7 +272,7 @@ header p {
             <div class="tabs" id="tabs"></div>
 
             <div class="search-row">
-                <input id="searchBox" placeholder="Filter plots, e.g. gppt, fluxlat, neet..." oninput="renderPlots()">
+                <input id="searchBox" placeholder="Filter plots, e.g. gppt, fluxlat, neet, lai, agb..." oninput="renderPlots()">
             </div>
 
             <div id="plots"></div>
@@ -291,26 +293,38 @@ const DATA = {
     "lat": 50.551,
     "lon": 4.746,
     "plots": {
-      "ensemble": [
+      "ensemble_LHF_GPP": [
         {
           "name": "ensemble_fluxlat_BE-Lon_day300.png",
-          "src": "assets/BE-Lon/ensemble/ensemble_fluxlat_BE-Lon_day300.png",
-          "category": "ensemble"
+          "src": "assets/BE-Lon/ensemble_LHF_GPP/ensemble_fluxlat_BE-Lon_day300.png",
+          "category": "ensemble_LHF_GPP"
         },
         {
           "name": "ensemble_fluxsens_BE-Lon_day300.png",
-          "src": "assets/BE-Lon/ensemble/ensemble_fluxsens_BE-Lon_day300.png",
-          "category": "ensemble"
+          "src": "assets/BE-Lon/ensemble_LHF_GPP/ensemble_fluxsens_BE-Lon_day300.png",
+          "category": "ensemble_LHF_GPP"
         },
         {
           "name": "ensemble_gppt_BE-Lon_day300.png",
-          "src": "assets/BE-Lon/ensemble/ensemble_gppt_BE-Lon_day300.png",
-          "category": "ensemble"
+          "src": "assets/BE-Lon/ensemble_LHF_GPP/ensemble_gppt_BE-Lon_day300.png",
+          "category": "ensemble_LHF_GPP"
         },
         {
           "name": "ensemble_neet_BE-Lon_day300.png",
-          "src": "assets/BE-Lon/ensemble/ensemble_neet_BE-Lon_day300.png",
-          "category": "ensemble"
+          "src": "assets/BE-Lon/ensemble_LHF_GPP/ensemble_neet_BE-Lon_day300.png",
+          "category": "ensemble_LHF_GPP"
+        }
+      ],
+      "ensemble_LAIAGB": [
+        {
+          "name": "ensemble_agb_BE-Lon_day300.png",
+          "src": "assets/BE-Lon/ensemble_LAIAGB/ensemble_agb_BE-Lon_day300.png",
+          "category": "ensemble_LAIAGB"
+        },
+        {
+          "name": "ensemble_lai_stics_BE-Lon_day300.png",
+          "src": "assets/BE-Lon/ensemble_LAIAGB/ensemble_lai_stics_BE-Lon_day300.png",
+          "category": "ensemble_LAIAGB"
         }
       ],
       "PRIOR_orig": [
@@ -378,6 +392,42 @@ const DATA = {
           "src": "assets/BE-Lon/PRIOR_optN/neet_BE-Lon_PRIOR_optN_from_nc.png",
           "category": "PRIOR_optN"
         }
+      ],
+      "PRIOR_orig_LAIAGB": [
+        {
+          "name": "agb_BE-Lon_PRIOR_orig_LAIAGB_from_nc.png",
+          "src": "assets/BE-Lon/PRIOR_orig_LAIAGB/agb_BE-Lon_PRIOR_orig_LAIAGB_from_nc.png",
+          "category": "PRIOR_orig_LAIAGB"
+        },
+        {
+          "name": "lai_stics_BE-Lon_PRIOR_orig_LAIAGB_from_nc.png",
+          "src": "assets/BE-Lon/PRIOR_orig_LAIAGB/lai_stics_BE-Lon_PRIOR_orig_LAIAGB_from_nc.png",
+          "category": "PRIOR_orig_LAIAGB"
+        }
+      ],
+      "PRIOR_optY_LAIAGB": [
+        {
+          "name": "agb_BE-Lon_PRIOR_optY_LAIAGB_from_nc.png",
+          "src": "assets/BE-Lon/PRIOR_optY_LAIAGB/agb_BE-Lon_PRIOR_optY_LAIAGB_from_nc.png",
+          "category": "PRIOR_optY_LAIAGB"
+        },
+        {
+          "name": "lai_stics_BE-Lon_PRIOR_optY_LAIAGB_from_nc.png",
+          "src": "assets/BE-Lon/PRIOR_optY_LAIAGB/lai_stics_BE-Lon_PRIOR_optY_LAIAGB_from_nc.png",
+          "category": "PRIOR_optY_LAIAGB"
+        }
+      ],
+      "PRIOR_optN_LAIAGB": [
+        {
+          "name": "agb_BE-Lon_PRIOR_optN_LAIAGB_from_nc.png",
+          "src": "assets/BE-Lon/PRIOR_optN_LAIAGB/agb_BE-Lon_PRIOR_optN_LAIAGB_from_nc.png",
+          "category": "PRIOR_optN_LAIAGB"
+        },
+        {
+          "name": "lai_stics_BE-Lon_PRIOR_optN_LAIAGB_from_nc.png",
+          "src": "assets/BE-Lon/PRIOR_optN_LAIAGB/lai_stics_BE-Lon_PRIOR_optN_LAIAGB_from_nc.png",
+          "category": "PRIOR_optN_LAIAGB"
+        }
       ]
     }
   },
@@ -387,26 +437,38 @@ const DATA = {
     "lat": 50.893,
     "lon": 13.522,
     "plots": {
-      "ensemble": [
+      "ensemble_LHF_GPP": [
         {
           "name": "ensemble_fluxlat_DE-Kli_day300.png",
-          "src": "assets/DE-Kli/ensemble/ensemble_fluxlat_DE-Kli_day300.png",
-          "category": "ensemble"
+          "src": "assets/DE-Kli/ensemble_LHF_GPP/ensemble_fluxlat_DE-Kli_day300.png",
+          "category": "ensemble_LHF_GPP"
         },
         {
           "name": "ensemble_fluxsens_DE-Kli_day300.png",
-          "src": "assets/DE-Kli/ensemble/ensemble_fluxsens_DE-Kli_day300.png",
-          "category": "ensemble"
+          "src": "assets/DE-Kli/ensemble_LHF_GPP/ensemble_fluxsens_DE-Kli_day300.png",
+          "category": "ensemble_LHF_GPP"
         },
         {
           "name": "ensemble_gppt_DE-Kli_day300.png",
-          "src": "assets/DE-Kli/ensemble/ensemble_gppt_DE-Kli_day300.png",
-          "category": "ensemble"
+          "src": "assets/DE-Kli/ensemble_LHF_GPP/ensemble_gppt_DE-Kli_day300.png",
+          "category": "ensemble_LHF_GPP"
         },
         {
           "name": "ensemble_neet_DE-Kli_day300.png",
-          "src": "assets/DE-Kli/ensemble/ensemble_neet_DE-Kli_day300.png",
-          "category": "ensemble"
+          "src": "assets/DE-Kli/ensemble_LHF_GPP/ensemble_neet_DE-Kli_day300.png",
+          "category": "ensemble_LHF_GPP"
+        }
+      ],
+      "ensemble_LAIAGB": [
+        {
+          "name": "ensemble_agb_DE-Kli_day300.png",
+          "src": "assets/DE-Kli/ensemble_LAIAGB/ensemble_agb_DE-Kli_day300.png",
+          "category": "ensemble_LAIAGB"
+        },
+        {
+          "name": "ensemble_lai_stics_DE-Kli_day300.png",
+          "src": "assets/DE-Kli/ensemble_LAIAGB/ensemble_lai_stics_DE-Kli_day300.png",
+          "category": "ensemble_LAIAGB"
         }
       ],
       "PRIOR_orig": [
@@ -474,6 +536,42 @@ const DATA = {
           "src": "assets/DE-Kli/PRIOR_optN/neet_DE-Kli_PRIOR_optN_from_nc.png",
           "category": "PRIOR_optN"
         }
+      ],
+      "PRIOR_orig_LAIAGB": [
+        {
+          "name": "agb_DE-Kli_PRIOR_orig_LAIAGB_from_nc.png",
+          "src": "assets/DE-Kli/PRIOR_orig_LAIAGB/agb_DE-Kli_PRIOR_orig_LAIAGB_from_nc.png",
+          "category": "PRIOR_orig_LAIAGB"
+        },
+        {
+          "name": "lai_stics_DE-Kli_PRIOR_orig_LAIAGB_from_nc.png",
+          "src": "assets/DE-Kli/PRIOR_orig_LAIAGB/lai_stics_DE-Kli_PRIOR_orig_LAIAGB_from_nc.png",
+          "category": "PRIOR_orig_LAIAGB"
+        }
+      ],
+      "PRIOR_optY_LAIAGB": [
+        {
+          "name": "agb_DE-Kli_PRIOR_optY_LAIAGB_from_nc.png",
+          "src": "assets/DE-Kli/PRIOR_optY_LAIAGB/agb_DE-Kli_PRIOR_optY_LAIAGB_from_nc.png",
+          "category": "PRIOR_optY_LAIAGB"
+        },
+        {
+          "name": "lai_stics_DE-Kli_PRIOR_optY_LAIAGB_from_nc.png",
+          "src": "assets/DE-Kli/PRIOR_optY_LAIAGB/lai_stics_DE-Kli_PRIOR_optY_LAIAGB_from_nc.png",
+          "category": "PRIOR_optY_LAIAGB"
+        }
+      ],
+      "PRIOR_optN_LAIAGB": [
+        {
+          "name": "agb_DE-Kli_PRIOR_optN_LAIAGB_from_nc.png",
+          "src": "assets/DE-Kli/PRIOR_optN_LAIAGB/agb_DE-Kli_PRIOR_optN_LAIAGB_from_nc.png",
+          "category": "PRIOR_optN_LAIAGB"
+        },
+        {
+          "name": "lai_stics_DE-Kli_PRIOR_optN_LAIAGB_from_nc.png",
+          "src": "assets/DE-Kli/PRIOR_optN_LAIAGB/lai_stics_DE-Kli_PRIOR_optN_LAIAGB_from_nc.png",
+          "category": "PRIOR_optN_LAIAGB"
+        }
       ]
     }
   },
@@ -483,26 +581,38 @@ const DATA = {
     "lat": 43.549,
     "lon": 1.106,
     "plots": {
-      "ensemble": [
+      "ensemble_LHF_GPP": [
         {
           "name": "ensemble_fluxlat_FR-Aur_day300.png",
-          "src": "assets/FR-Aur/ensemble/ensemble_fluxlat_FR-Aur_day300.png",
-          "category": "ensemble"
+          "src": "assets/FR-Aur/ensemble_LHF_GPP/ensemble_fluxlat_FR-Aur_day300.png",
+          "category": "ensemble_LHF_GPP"
         },
         {
           "name": "ensemble_fluxsens_FR-Aur_day300.png",
-          "src": "assets/FR-Aur/ensemble/ensemble_fluxsens_FR-Aur_day300.png",
-          "category": "ensemble"
+          "src": "assets/FR-Aur/ensemble_LHF_GPP/ensemble_fluxsens_FR-Aur_day300.png",
+          "category": "ensemble_LHF_GPP"
         },
         {
           "name": "ensemble_gppt_FR-Aur_day300.png",
-          "src": "assets/FR-Aur/ensemble/ensemble_gppt_FR-Aur_day300.png",
-          "category": "ensemble"
+          "src": "assets/FR-Aur/ensemble_LHF_GPP/ensemble_gppt_FR-Aur_day300.png",
+          "category": "ensemble_LHF_GPP"
         },
         {
           "name": "ensemble_neet_FR-Aur_day300.png",
-          "src": "assets/FR-Aur/ensemble/ensemble_neet_FR-Aur_day300.png",
-          "category": "ensemble"
+          "src": "assets/FR-Aur/ensemble_LHF_GPP/ensemble_neet_FR-Aur_day300.png",
+          "category": "ensemble_LHF_GPP"
+        }
+      ],
+      "ensemble_LAIAGB": [
+        {
+          "name": "ensemble_agb_FR-Aur_day300.png",
+          "src": "assets/FR-Aur/ensemble_LAIAGB/ensemble_agb_FR-Aur_day300.png",
+          "category": "ensemble_LAIAGB"
+        },
+        {
+          "name": "ensemble_lai_stics_FR-Aur_day300.png",
+          "src": "assets/FR-Aur/ensemble_LAIAGB/ensemble_lai_stics_FR-Aur_day300.png",
+          "category": "ensemble_LAIAGB"
         }
       ],
       "PRIOR_orig": [
@@ -570,6 +680,42 @@ const DATA = {
           "src": "assets/FR-Aur/PRIOR_optN/neet_FR-Aur_PRIOR_optN_from_nc.png",
           "category": "PRIOR_optN"
         }
+      ],
+      "PRIOR_orig_LAIAGB": [
+        {
+          "name": "agb_FR-Aur_PRIOR_orig_LAIAGB_from_nc.png",
+          "src": "assets/FR-Aur/PRIOR_orig_LAIAGB/agb_FR-Aur_PRIOR_orig_LAIAGB_from_nc.png",
+          "category": "PRIOR_orig_LAIAGB"
+        },
+        {
+          "name": "lai_stics_FR-Aur_PRIOR_orig_LAIAGB_from_nc.png",
+          "src": "assets/FR-Aur/PRIOR_orig_LAIAGB/lai_stics_FR-Aur_PRIOR_orig_LAIAGB_from_nc.png",
+          "category": "PRIOR_orig_LAIAGB"
+        }
+      ],
+      "PRIOR_optY_LAIAGB": [
+        {
+          "name": "agb_FR-Aur_PRIOR_optY_LAIAGB_from_nc.png",
+          "src": "assets/FR-Aur/PRIOR_optY_LAIAGB/agb_FR-Aur_PRIOR_optY_LAIAGB_from_nc.png",
+          "category": "PRIOR_optY_LAIAGB"
+        },
+        {
+          "name": "lai_stics_FR-Aur_PRIOR_optY_LAIAGB_from_nc.png",
+          "src": "assets/FR-Aur/PRIOR_optY_LAIAGB/lai_stics_FR-Aur_PRIOR_optY_LAIAGB_from_nc.png",
+          "category": "PRIOR_optY_LAIAGB"
+        }
+      ],
+      "PRIOR_optN_LAIAGB": [
+        {
+          "name": "agb_FR-Aur_PRIOR_optN_LAIAGB_from_nc.png",
+          "src": "assets/FR-Aur/PRIOR_optN_LAIAGB/agb_FR-Aur_PRIOR_optN_LAIAGB_from_nc.png",
+          "category": "PRIOR_optN_LAIAGB"
+        },
+        {
+          "name": "lai_stics_FR-Aur_PRIOR_optN_LAIAGB_from_nc.png",
+          "src": "assets/FR-Aur/PRIOR_optN_LAIAGB/lai_stics_FR-Aur_PRIOR_optN_LAIAGB_from_nc.png",
+          "category": "PRIOR_optN_LAIAGB"
+        }
       ]
     }
   },
@@ -579,26 +725,38 @@ const DATA = {
     "lat": 48.844,
     "lon": 1.951,
     "plots": {
-      "ensemble": [
+      "ensemble_LHF_GPP": [
         {
           "name": "ensemble_fluxlat_FR-Gri_day300.png",
-          "src": "assets/FR-Gri/ensemble/ensemble_fluxlat_FR-Gri_day300.png",
-          "category": "ensemble"
+          "src": "assets/FR-Gri/ensemble_LHF_GPP/ensemble_fluxlat_FR-Gri_day300.png",
+          "category": "ensemble_LHF_GPP"
         },
         {
           "name": "ensemble_fluxsens_FR-Gri_day300.png",
-          "src": "assets/FR-Gri/ensemble/ensemble_fluxsens_FR-Gri_day300.png",
-          "category": "ensemble"
+          "src": "assets/FR-Gri/ensemble_LHF_GPP/ensemble_fluxsens_FR-Gri_day300.png",
+          "category": "ensemble_LHF_GPP"
         },
         {
           "name": "ensemble_gppt_FR-Gri_day300.png",
-          "src": "assets/FR-Gri/ensemble/ensemble_gppt_FR-Gri_day300.png",
-          "category": "ensemble"
+          "src": "assets/FR-Gri/ensemble_LHF_GPP/ensemble_gppt_FR-Gri_day300.png",
+          "category": "ensemble_LHF_GPP"
         },
         {
           "name": "ensemble_neet_FR-Gri_day300.png",
-          "src": "assets/FR-Gri/ensemble/ensemble_neet_FR-Gri_day300.png",
-          "category": "ensemble"
+          "src": "assets/FR-Gri/ensemble_LHF_GPP/ensemble_neet_FR-Gri_day300.png",
+          "category": "ensemble_LHF_GPP"
+        }
+      ],
+      "ensemble_LAIAGB": [
+        {
+          "name": "ensemble_agb_FR-Gri_day300.png",
+          "src": "assets/FR-Gri/ensemble_LAIAGB/ensemble_agb_FR-Gri_day300.png",
+          "category": "ensemble_LAIAGB"
+        },
+        {
+          "name": "ensemble_lai_stics_FR-Gri_day300.png",
+          "src": "assets/FR-Gri/ensemble_LAIAGB/ensemble_lai_stics_FR-Gri_day300.png",
+          "category": "ensemble_LAIAGB"
         }
       ],
       "PRIOR_orig": [
@@ -666,6 +824,42 @@ const DATA = {
           "src": "assets/FR-Gri/PRIOR_optN/neet_FR-Gri_PRIOR_optN_from_nc.png",
           "category": "PRIOR_optN"
         }
+      ],
+      "PRIOR_orig_LAIAGB": [
+        {
+          "name": "agb_FR-Gri_PRIOR_orig_LAIAGB_from_nc.png",
+          "src": "assets/FR-Gri/PRIOR_orig_LAIAGB/agb_FR-Gri_PRIOR_orig_LAIAGB_from_nc.png",
+          "category": "PRIOR_orig_LAIAGB"
+        },
+        {
+          "name": "lai_stics_FR-Gri_PRIOR_orig_LAIAGB_from_nc.png",
+          "src": "assets/FR-Gri/PRIOR_orig_LAIAGB/lai_stics_FR-Gri_PRIOR_orig_LAIAGB_from_nc.png",
+          "category": "PRIOR_orig_LAIAGB"
+        }
+      ],
+      "PRIOR_optY_LAIAGB": [
+        {
+          "name": "agb_FR-Gri_PRIOR_optY_LAIAGB_from_nc.png",
+          "src": "assets/FR-Gri/PRIOR_optY_LAIAGB/agb_FR-Gri_PRIOR_optY_LAIAGB_from_nc.png",
+          "category": "PRIOR_optY_LAIAGB"
+        },
+        {
+          "name": "lai_stics_FR-Gri_PRIOR_optY_LAIAGB_from_nc.png",
+          "src": "assets/FR-Gri/PRIOR_optY_LAIAGB/lai_stics_FR-Gri_PRIOR_optY_LAIAGB_from_nc.png",
+          "category": "PRIOR_optY_LAIAGB"
+        }
+      ],
+      "PRIOR_optN_LAIAGB": [
+        {
+          "name": "agb_FR-Gri_PRIOR_optN_LAIAGB_from_nc.png",
+          "src": "assets/FR-Gri/PRIOR_optN_LAIAGB/agb_FR-Gri_PRIOR_optN_LAIAGB_from_nc.png",
+          "category": "PRIOR_optN_LAIAGB"
+        },
+        {
+          "name": "lai_stics_FR-Gri_PRIOR_optN_LAIAGB_from_nc.png",
+          "src": "assets/FR-Gri/PRIOR_optN_LAIAGB/lai_stics_FR-Gri_PRIOR_optN_LAIAGB_from_nc.png",
+          "category": "PRIOR_optN_LAIAGB"
+        }
       ]
     }
   },
@@ -675,23 +869,182 @@ const DATA = {
     "lat": 43.496,
     "lon": 1.237,
     "plots": {
-      "ensemble": [],
-      "PRIOR_orig": [],
-      "PRIOR_optY": [],
-      "PRIOR_optN": []
+      "ensemble_LHF_GPP": [
+        {
+          "name": "ensemble_fluxlat_FR-Lam_day300.png",
+          "src": "assets/FR-Lam/ensemble_LHF_GPP/ensemble_fluxlat_FR-Lam_day300.png",
+          "category": "ensemble_LHF_GPP"
+        },
+        {
+          "name": "ensemble_fluxsens_FR-Lam_day300.png",
+          "src": "assets/FR-Lam/ensemble_LHF_GPP/ensemble_fluxsens_FR-Lam_day300.png",
+          "category": "ensemble_LHF_GPP"
+        },
+        {
+          "name": "ensemble_gppt_FR-Lam_day300.png",
+          "src": "assets/FR-Lam/ensemble_LHF_GPP/ensemble_gppt_FR-Lam_day300.png",
+          "category": "ensemble_LHF_GPP"
+        },
+        {
+          "name": "ensemble_neet_FR-Lam_day300.png",
+          "src": "assets/FR-Lam/ensemble_LHF_GPP/ensemble_neet_FR-Lam_day300.png",
+          "category": "ensemble_LHF_GPP"
+        }
+      ],
+      "ensemble_LAIAGB": [
+        {
+          "name": "ensemble_agb_FR-Lam_day300.png",
+          "src": "assets/FR-Lam/ensemble_LAIAGB/ensemble_agb_FR-Lam_day300.png",
+          "category": "ensemble_LAIAGB"
+        },
+        {
+          "name": "ensemble_lai_stics_FR-Lam_day300.png",
+          "src": "assets/FR-Lam/ensemble_LAIAGB/ensemble_lai_stics_FR-Lam_day300.png",
+          "category": "ensemble_LAIAGB"
+        }
+      ],
+      "PRIOR_orig": [
+        {
+          "name": "fluxlat_FR-Lam_PRIOR_orig_from_nc.png",
+          "src": "assets/FR-Lam/PRIOR_orig/fluxlat_FR-Lam_PRIOR_orig_from_nc.png",
+          "category": "PRIOR_orig"
+        },
+        {
+          "name": "fluxsens_FR-Lam_PRIOR_orig_from_nc.png",
+          "src": "assets/FR-Lam/PRIOR_orig/fluxsens_FR-Lam_PRIOR_orig_from_nc.png",
+          "category": "PRIOR_orig"
+        },
+        {
+          "name": "gppt_FR-Lam_PRIOR_orig_from_nc.png",
+          "src": "assets/FR-Lam/PRIOR_orig/gppt_FR-Lam_PRIOR_orig_from_nc.png",
+          "category": "PRIOR_orig"
+        },
+        {
+          "name": "neet_FR-Lam_PRIOR_orig_from_nc.png",
+          "src": "assets/FR-Lam/PRIOR_orig/neet_FR-Lam_PRIOR_orig_from_nc.png",
+          "category": "PRIOR_orig"
+        }
+      ],
+      "PRIOR_optY": [
+        {
+          "name": "fluxlat_FR-Lam_PRIOR_optY_from_nc.png",
+          "src": "assets/FR-Lam/PRIOR_optY/fluxlat_FR-Lam_PRIOR_optY_from_nc.png",
+          "category": "PRIOR_optY"
+        },
+        {
+          "name": "fluxsens_FR-Lam_PRIOR_optY_from_nc.png",
+          "src": "assets/FR-Lam/PRIOR_optY/fluxsens_FR-Lam_PRIOR_optY_from_nc.png",
+          "category": "PRIOR_optY"
+        },
+        {
+          "name": "gppt_FR-Lam_PRIOR_optY_from_nc.png",
+          "src": "assets/FR-Lam/PRIOR_optY/gppt_FR-Lam_PRIOR_optY_from_nc.png",
+          "category": "PRIOR_optY"
+        },
+        {
+          "name": "neet_FR-Lam_PRIOR_optY_from_nc.png",
+          "src": "assets/FR-Lam/PRIOR_optY/neet_FR-Lam_PRIOR_optY_from_nc.png",
+          "category": "PRIOR_optY"
+        }
+      ],
+      "PRIOR_optN": [
+        {
+          "name": "fluxlat_FR-Lam_PRIOR_optN_from_nc.png",
+          "src": "assets/FR-Lam/PRIOR_optN/fluxlat_FR-Lam_PRIOR_optN_from_nc.png",
+          "category": "PRIOR_optN"
+        },
+        {
+          "name": "fluxsens_FR-Lam_PRIOR_optN_from_nc.png",
+          "src": "assets/FR-Lam/PRIOR_optN/fluxsens_FR-Lam_PRIOR_optN_from_nc.png",
+          "category": "PRIOR_optN"
+        },
+        {
+          "name": "gppt_FR-Lam_PRIOR_optN_from_nc.png",
+          "src": "assets/FR-Lam/PRIOR_optN/gppt_FR-Lam_PRIOR_optN_from_nc.png",
+          "category": "PRIOR_optN"
+        },
+        {
+          "name": "neet_FR-Lam_PRIOR_optN_from_nc.png",
+          "src": "assets/FR-Lam/PRIOR_optN/neet_FR-Lam_PRIOR_optN_from_nc.png",
+          "category": "PRIOR_optN"
+        }
+      ],
+      "PRIOR_orig_LAIAGB": [
+        {
+          "name": "agb_FR-Lam_PRIOR_orig_LAIAGB_from_nc.png",
+          "src": "assets/FR-Lam/PRIOR_orig_LAIAGB/agb_FR-Lam_PRIOR_orig_LAIAGB_from_nc.png",
+          "category": "PRIOR_orig_LAIAGB"
+        },
+        {
+          "name": "lai_stics_FR-Lam_PRIOR_orig_LAIAGB_from_nc.png",
+          "src": "assets/FR-Lam/PRIOR_orig_LAIAGB/lai_stics_FR-Lam_PRIOR_orig_LAIAGB_from_nc.png",
+          "category": "PRIOR_orig_LAIAGB"
+        }
+      ],
+      "PRIOR_optY_LAIAGB": [
+        {
+          "name": "agb_FR-Lam_PRIOR_optY_LAIAGB_from_nc.png",
+          "src": "assets/FR-Lam/PRIOR_optY_LAIAGB/agb_FR-Lam_PRIOR_optY_LAIAGB_from_nc.png",
+          "category": "PRIOR_optY_LAIAGB"
+        },
+        {
+          "name": "lai_stics_FR-Lam_PRIOR_optY_LAIAGB_from_nc.png",
+          "src": "assets/FR-Lam/PRIOR_optY_LAIAGB/lai_stics_FR-Lam_PRIOR_optY_LAIAGB_from_nc.png",
+          "category": "PRIOR_optY_LAIAGB"
+        }
+      ],
+      "PRIOR_optN_LAIAGB": [
+        {
+          "name": "agb_FR-Lam_PRIOR_optN_LAIAGB_from_nc.png",
+          "src": "assets/FR-Lam/PRIOR_optN_LAIAGB/agb_FR-Lam_PRIOR_optN_LAIAGB_from_nc.png",
+          "category": "PRIOR_optN_LAIAGB"
+        },
+        {
+          "name": "lai_stics_FR-Lam_PRIOR_optN_LAIAGB_from_nc.png",
+          "src": "assets/FR-Lam/PRIOR_optN_LAIAGB/lai_stics_FR-Lam_PRIOR_optN_LAIAGB_from_nc.png",
+          "category": "PRIOR_optN_LAIAGB"
+        }
+      ]
     }
   }
 };
-
 const CATEGORIES = [
-    ["ensemble", "Ensemble"],
-    ["PRIOR_orig", "PRIOR_orig"],
-    ["PRIOR_optY", "PRIOR_optY"],
-    ["PRIOR_optN", "PRIOR_optN"],
+  {
+    "key": "ensemble_LHF_GPP",
+    "label": "Ensemble LHF/GPP"
+  },
+  {
+    "key": "ensemble_LAIAGB",
+    "label": "Ensemble LAI/AGB"
+  },
+  {
+    "key": "PRIOR_orig",
+    "label": "PRIOR_orig LHF/GPP"
+  },
+  {
+    "key": "PRIOR_optY",
+    "label": "PRIOR_optY LHF/GPP"
+  },
+  {
+    "key": "PRIOR_optN",
+    "label": "PRIOR_optN LHF/GPP"
+  },
+  {
+    "key": "PRIOR_orig_LAIAGB",
+    "label": "PRIOR_orig LAI/AGB"
+  },
+  {
+    "key": "PRIOR_optY_LAIAGB",
+    "label": "PRIOR_optY LAI/AGB"
+  },
+  {
+    "key": "PRIOR_optN_LAIAGB",
+    "label": "PRIOR_optN LAI/AGB"
+  }
 ];
 
 let currentSite = Object.keys(DATA)[0];
-let currentCategory = "ensemble";
+let currentCategory = CATEGORIES[0].key;
 
 const map = L.map("map").setView([47.2, 4.5], 5);
 
@@ -743,7 +1096,9 @@ function renderTabs() {
     const tabs = document.getElementById("tabs");
     tabs.innerHTML = "";
 
-    for (const [cat, label] of CATEGORIES) {
+    for (const catObj of CATEGORIES) {
+        const cat = catObj.key;
+        const label = catObj.label;
         const n = DATA[currentSite].plots[cat] ? DATA[currentSite].plots[cat].length : 0;
 
         const btn = document.createElement("button");
