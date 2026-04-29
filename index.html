@@ -1,0 +1,825 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>ORCHIDAS LHF/GPP Dashboard</title>
+
+<link
+  rel="stylesheet"
+  href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+/>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<style>
+:root {
+    --bg: #f3f4f6;
+    --panel: #ffffff;
+    --text: #111827;
+    --muted: #6b7280;
+    --blue: #2563eb;
+    --border: #e5e7eb;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+}
+
+header {
+    background: #111827;
+    color: white;
+    padding: 16px 24px;
+}
+
+header h1 {
+    margin: 0;
+    font-size: 24px;
+}
+
+header p {
+    margin: 6px 0 0;
+    color: #d1d5db;
+    font-size: 14px;
+}
+
+.layout {
+    display: grid;
+    grid-template-columns: 440px 1fr;
+    height: calc(100vh - 75px);
+}
+
+.left {
+    display: flex;
+    flex-direction: column;
+    border-right: 1px solid var(--border);
+    background: var(--panel);
+}
+
+#map {
+    height: 52%;
+    min-height: 360px;
+    border-bottom: 1px solid var(--border);
+}
+
+.site-list {
+    padding: 16px;
+    overflow: auto;
+}
+
+.site-button {
+    display: block;
+    width: 100%;
+    text-align: left;
+    padding: 10px 12px;
+    margin-bottom: 8px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: white;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.site-button:hover {
+    border-color: var(--blue);
+}
+
+.site-button.active {
+    background: #eff6ff;
+    border-color: var(--blue);
+    color: var(--blue);
+}
+
+.right {
+    overflow: auto;
+    padding: 20px;
+}
+
+.panel {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 18px;
+    box-shadow: 0 1px 8px rgba(0,0,0,0.06);
+}
+
+.site-title {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 4px;
+}
+
+.site-subtitle {
+    color: var(--muted);
+    margin-bottom: 16px;
+}
+
+.tabs {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 18px;
+}
+
+.tab {
+    border: 1px solid var(--border);
+    background: #f9fafb;
+    padding: 8px 12px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.tab.active {
+    background: var(--blue);
+    color: white;
+    border-color: var(--blue);
+}
+
+.search-row {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 18px;
+}
+
+.search-row input {
+    flex: 1;
+    padding: 10px 12px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    font-size: 14px;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(430px, 1fr));
+    gap: 18px;
+}
+
+.card {
+    border: 1px solid var(--border);
+    background: white;
+    border-radius: 14px;
+    padding: 10px;
+}
+
+.card img {
+    width: 100%;
+    border-radius: 10px;
+    cursor: zoom-in;
+    display: block;
+}
+
+.caption {
+    margin-top: 8px;
+    font-size: 13px;
+    color: var(--muted);
+    word-break: break-all;
+}
+
+.empty {
+    padding: 18px;
+    background: #fff7ed;
+    border: 1px solid #fed7aa;
+    color: #9a3412;
+    border-radius: 12px;
+    font-weight: bold;
+}
+
+.leaflet-popup-content {
+    font-size: 14px;
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 9999;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.82);
+    align-items: center;
+    justify-content: center;
+    padding: 30px;
+}
+
+.modal img {
+    max-width: 95vw;
+    max-height: 90vh;
+    background: white;
+    border-radius: 10px;
+}
+
+.modal.show {
+    display: flex;
+}
+
+.close {
+    position: fixed;
+    top: 18px;
+    right: 26px;
+    color: white;
+    font-size: 34px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+@media (max-width: 1000px) {
+    .layout {
+        grid-template-columns: 1fr;
+        height: auto;
+    }
+    #map {
+        height: 420px;
+    }
+    .grid {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <h1>ORCHIDAS LHF/GPP Dashboard</h1>
+    <p>Interactive site map with ensemble and per-run plots generated from ORCHIDAS NetCDF outputs.</p>
+</header>
+
+<div class="layout">
+    <div class="left">
+        <div id="map"></div>
+        <div class="site-list">
+            <h3>Sites</h3>
+            <div id="siteButtons"></div>
+        </div>
+    </div>
+
+    <div class="right">
+        <div class="panel">
+            <div class="site-title" id="siteTitle">Select a site</div>
+            <div class="site-subtitle" id="siteSubtitle"></div>
+
+            <div class="tabs" id="tabs"></div>
+
+            <div class="search-row">
+                <input id="searchBox" placeholder="Filter plots, e.g. gppt, fluxlat, neet..." oninput="renderPlots()">
+            </div>
+
+            <div id="plots"></div>
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="modal" onclick="closeModal()">
+    <span class="close">&times;</span>
+    <img id="modalImg">
+</div>
+
+<script>
+const DATA = {
+  "BE-Lon": {
+    "name": "BE-Lon",
+    "folder": "prior_BE-Lon",
+    "lat": 50.551,
+    "lon": 4.746,
+    "plots": {
+      "ensemble": [
+        {
+          "name": "ensemble_fluxlat_BE-Lon_day300.png",
+          "src": "assets/BE-Lon/ensemble/ensemble_fluxlat_BE-Lon_day300.png",
+          "category": "ensemble"
+        },
+        {
+          "name": "ensemble_fluxsens_BE-Lon_day300.png",
+          "src": "assets/BE-Lon/ensemble/ensemble_fluxsens_BE-Lon_day300.png",
+          "category": "ensemble"
+        },
+        {
+          "name": "ensemble_gppt_BE-Lon_day300.png",
+          "src": "assets/BE-Lon/ensemble/ensemble_gppt_BE-Lon_day300.png",
+          "category": "ensemble"
+        },
+        {
+          "name": "ensemble_neet_BE-Lon_day300.png",
+          "src": "assets/BE-Lon/ensemble/ensemble_neet_BE-Lon_day300.png",
+          "category": "ensemble"
+        }
+      ],
+      "PRIOR_orig": [
+        {
+          "name": "fluxlat_BE-Lon_PRIOR_orig_from_nc.png",
+          "src": "assets/BE-Lon/PRIOR_orig/fluxlat_BE-Lon_PRIOR_orig_from_nc.png",
+          "category": "PRIOR_orig"
+        },
+        {
+          "name": "fluxsens_BE-Lon_PRIOR_orig_from_nc.png",
+          "src": "assets/BE-Lon/PRIOR_orig/fluxsens_BE-Lon_PRIOR_orig_from_nc.png",
+          "category": "PRIOR_orig"
+        },
+        {
+          "name": "gppt_BE-Lon_PRIOR_orig_from_nc.png",
+          "src": "assets/BE-Lon/PRIOR_orig/gppt_BE-Lon_PRIOR_orig_from_nc.png",
+          "category": "PRIOR_orig"
+        },
+        {
+          "name": "neet_BE-Lon_PRIOR_orig_from_nc.png",
+          "src": "assets/BE-Lon/PRIOR_orig/neet_BE-Lon_PRIOR_orig_from_nc.png",
+          "category": "PRIOR_orig"
+        }
+      ],
+      "PRIOR_optY": [
+        {
+          "name": "fluxlat_BE-Lon_PRIOR_optY_from_nc.png",
+          "src": "assets/BE-Lon/PRIOR_optY/fluxlat_BE-Lon_PRIOR_optY_from_nc.png",
+          "category": "PRIOR_optY"
+        },
+        {
+          "name": "fluxsens_BE-Lon_PRIOR_optY_from_nc.png",
+          "src": "assets/BE-Lon/PRIOR_optY/fluxsens_BE-Lon_PRIOR_optY_from_nc.png",
+          "category": "PRIOR_optY"
+        },
+        {
+          "name": "gppt_BE-Lon_PRIOR_optY_from_nc.png",
+          "src": "assets/BE-Lon/PRIOR_optY/gppt_BE-Lon_PRIOR_optY_from_nc.png",
+          "category": "PRIOR_optY"
+        },
+        {
+          "name": "neet_BE-Lon_PRIOR_optY_from_nc.png",
+          "src": "assets/BE-Lon/PRIOR_optY/neet_BE-Lon_PRIOR_optY_from_nc.png",
+          "category": "PRIOR_optY"
+        }
+      ],
+      "PRIOR_optN": [
+        {
+          "name": "fluxlat_BE-Lon_PRIOR_optN_from_nc.png",
+          "src": "assets/BE-Lon/PRIOR_optN/fluxlat_BE-Lon_PRIOR_optN_from_nc.png",
+          "category": "PRIOR_optN"
+        },
+        {
+          "name": "fluxsens_BE-Lon_PRIOR_optN_from_nc.png",
+          "src": "assets/BE-Lon/PRIOR_optN/fluxsens_BE-Lon_PRIOR_optN_from_nc.png",
+          "category": "PRIOR_optN"
+        },
+        {
+          "name": "gppt_BE-Lon_PRIOR_optN_from_nc.png",
+          "src": "assets/BE-Lon/PRIOR_optN/gppt_BE-Lon_PRIOR_optN_from_nc.png",
+          "category": "PRIOR_optN"
+        },
+        {
+          "name": "neet_BE-Lon_PRIOR_optN_from_nc.png",
+          "src": "assets/BE-Lon/PRIOR_optN/neet_BE-Lon_PRIOR_optN_from_nc.png",
+          "category": "PRIOR_optN"
+        }
+      ]
+    }
+  },
+  "DE-Kli": {
+    "name": "DE-Kli",
+    "folder": "prior_DE-Kli",
+    "lat": 50.893,
+    "lon": 13.522,
+    "plots": {
+      "ensemble": [
+        {
+          "name": "ensemble_fluxlat_DE-Kli_day300.png",
+          "src": "assets/DE-Kli/ensemble/ensemble_fluxlat_DE-Kli_day300.png",
+          "category": "ensemble"
+        },
+        {
+          "name": "ensemble_fluxsens_DE-Kli_day300.png",
+          "src": "assets/DE-Kli/ensemble/ensemble_fluxsens_DE-Kli_day300.png",
+          "category": "ensemble"
+        },
+        {
+          "name": "ensemble_gppt_DE-Kli_day300.png",
+          "src": "assets/DE-Kli/ensemble/ensemble_gppt_DE-Kli_day300.png",
+          "category": "ensemble"
+        },
+        {
+          "name": "ensemble_neet_DE-Kli_day300.png",
+          "src": "assets/DE-Kli/ensemble/ensemble_neet_DE-Kli_day300.png",
+          "category": "ensemble"
+        }
+      ],
+      "PRIOR_orig": [
+        {
+          "name": "fluxlat_DE-Kli_PRIOR_orig_from_nc.png",
+          "src": "assets/DE-Kli/PRIOR_orig/fluxlat_DE-Kli_PRIOR_orig_from_nc.png",
+          "category": "PRIOR_orig"
+        },
+        {
+          "name": "fluxsens_DE-Kli_PRIOR_orig_from_nc.png",
+          "src": "assets/DE-Kli/PRIOR_orig/fluxsens_DE-Kli_PRIOR_orig_from_nc.png",
+          "category": "PRIOR_orig"
+        },
+        {
+          "name": "gppt_DE-Kli_PRIOR_orig_from_nc.png",
+          "src": "assets/DE-Kli/PRIOR_orig/gppt_DE-Kli_PRIOR_orig_from_nc.png",
+          "category": "PRIOR_orig"
+        },
+        {
+          "name": "neet_DE-Kli_PRIOR_orig_from_nc.png",
+          "src": "assets/DE-Kli/PRIOR_orig/neet_DE-Kli_PRIOR_orig_from_nc.png",
+          "category": "PRIOR_orig"
+        }
+      ],
+      "PRIOR_optY": [
+        {
+          "name": "fluxlat_DE-Kli_PRIOR_optY_from_nc.png",
+          "src": "assets/DE-Kli/PRIOR_optY/fluxlat_DE-Kli_PRIOR_optY_from_nc.png",
+          "category": "PRIOR_optY"
+        },
+        {
+          "name": "fluxsens_DE-Kli_PRIOR_optY_from_nc.png",
+          "src": "assets/DE-Kli/PRIOR_optY/fluxsens_DE-Kli_PRIOR_optY_from_nc.png",
+          "category": "PRIOR_optY"
+        },
+        {
+          "name": "gppt_DE-Kli_PRIOR_optY_from_nc.png",
+          "src": "assets/DE-Kli/PRIOR_optY/gppt_DE-Kli_PRIOR_optY_from_nc.png",
+          "category": "PRIOR_optY"
+        },
+        {
+          "name": "neet_DE-Kli_PRIOR_optY_from_nc.png",
+          "src": "assets/DE-Kli/PRIOR_optY/neet_DE-Kli_PRIOR_optY_from_nc.png",
+          "category": "PRIOR_optY"
+        }
+      ],
+      "PRIOR_optN": [
+        {
+          "name": "fluxlat_DE-Kli_PRIOR_optN_from_nc.png",
+          "src": "assets/DE-Kli/PRIOR_optN/fluxlat_DE-Kli_PRIOR_optN_from_nc.png",
+          "category": "PRIOR_optN"
+        },
+        {
+          "name": "fluxsens_DE-Kli_PRIOR_optN_from_nc.png",
+          "src": "assets/DE-Kli/PRIOR_optN/fluxsens_DE-Kli_PRIOR_optN_from_nc.png",
+          "category": "PRIOR_optN"
+        },
+        {
+          "name": "gppt_DE-Kli_PRIOR_optN_from_nc.png",
+          "src": "assets/DE-Kli/PRIOR_optN/gppt_DE-Kli_PRIOR_optN_from_nc.png",
+          "category": "PRIOR_optN"
+        },
+        {
+          "name": "neet_DE-Kli_PRIOR_optN_from_nc.png",
+          "src": "assets/DE-Kli/PRIOR_optN/neet_DE-Kli_PRIOR_optN_from_nc.png",
+          "category": "PRIOR_optN"
+        }
+      ]
+    }
+  },
+  "FR-Aur": {
+    "name": "FR-Aur",
+    "folder": "prior_FR-Aur",
+    "lat": 43.549,
+    "lon": 1.106,
+    "plots": {
+      "ensemble": [
+        {
+          "name": "ensemble_fluxlat_FR-Aur_day300.png",
+          "src": "assets/FR-Aur/ensemble/ensemble_fluxlat_FR-Aur_day300.png",
+          "category": "ensemble"
+        },
+        {
+          "name": "ensemble_fluxsens_FR-Aur_day300.png",
+          "src": "assets/FR-Aur/ensemble/ensemble_fluxsens_FR-Aur_day300.png",
+          "category": "ensemble"
+        },
+        {
+          "name": "ensemble_gppt_FR-Aur_day300.png",
+          "src": "assets/FR-Aur/ensemble/ensemble_gppt_FR-Aur_day300.png",
+          "category": "ensemble"
+        },
+        {
+          "name": "ensemble_neet_FR-Aur_day300.png",
+          "src": "assets/FR-Aur/ensemble/ensemble_neet_FR-Aur_day300.png",
+          "category": "ensemble"
+        }
+      ],
+      "PRIOR_orig": [
+        {
+          "name": "fluxlat_FR-Aur_PRIOR_orig_from_nc.png",
+          "src": "assets/FR-Aur/PRIOR_orig/fluxlat_FR-Aur_PRIOR_orig_from_nc.png",
+          "category": "PRIOR_orig"
+        },
+        {
+          "name": "fluxsens_FR-Aur_PRIOR_orig_from_nc.png",
+          "src": "assets/FR-Aur/PRIOR_orig/fluxsens_FR-Aur_PRIOR_orig_from_nc.png",
+          "category": "PRIOR_orig"
+        },
+        {
+          "name": "gppt_FR-Aur_PRIOR_orig_from_nc.png",
+          "src": "assets/FR-Aur/PRIOR_orig/gppt_FR-Aur_PRIOR_orig_from_nc.png",
+          "category": "PRIOR_orig"
+        },
+        {
+          "name": "neet_FR-Aur_PRIOR_orig_from_nc.png",
+          "src": "assets/FR-Aur/PRIOR_orig/neet_FR-Aur_PRIOR_orig_from_nc.png",
+          "category": "PRIOR_orig"
+        }
+      ],
+      "PRIOR_optY": [
+        {
+          "name": "fluxlat_FR-Aur_PRIOR_optY_from_nc.png",
+          "src": "assets/FR-Aur/PRIOR_optY/fluxlat_FR-Aur_PRIOR_optY_from_nc.png",
+          "category": "PRIOR_optY"
+        },
+        {
+          "name": "fluxsens_FR-Aur_PRIOR_optY_from_nc.png",
+          "src": "assets/FR-Aur/PRIOR_optY/fluxsens_FR-Aur_PRIOR_optY_from_nc.png",
+          "category": "PRIOR_optY"
+        },
+        {
+          "name": "gppt_FR-Aur_PRIOR_optY_from_nc.png",
+          "src": "assets/FR-Aur/PRIOR_optY/gppt_FR-Aur_PRIOR_optY_from_nc.png",
+          "category": "PRIOR_optY"
+        },
+        {
+          "name": "neet_FR-Aur_PRIOR_optY_from_nc.png",
+          "src": "assets/FR-Aur/PRIOR_optY/neet_FR-Aur_PRIOR_optY_from_nc.png",
+          "category": "PRIOR_optY"
+        }
+      ],
+      "PRIOR_optN": [
+        {
+          "name": "fluxlat_FR-Aur_PRIOR_optN_from_nc.png",
+          "src": "assets/FR-Aur/PRIOR_optN/fluxlat_FR-Aur_PRIOR_optN_from_nc.png",
+          "category": "PRIOR_optN"
+        },
+        {
+          "name": "fluxsens_FR-Aur_PRIOR_optN_from_nc.png",
+          "src": "assets/FR-Aur/PRIOR_optN/fluxsens_FR-Aur_PRIOR_optN_from_nc.png",
+          "category": "PRIOR_optN"
+        },
+        {
+          "name": "gppt_FR-Aur_PRIOR_optN_from_nc.png",
+          "src": "assets/FR-Aur/PRIOR_optN/gppt_FR-Aur_PRIOR_optN_from_nc.png",
+          "category": "PRIOR_optN"
+        },
+        {
+          "name": "neet_FR-Aur_PRIOR_optN_from_nc.png",
+          "src": "assets/FR-Aur/PRIOR_optN/neet_FR-Aur_PRIOR_optN_from_nc.png",
+          "category": "PRIOR_optN"
+        }
+      ]
+    }
+  },
+  "FR-Gri": {
+    "name": "FR-Gri",
+    "folder": "prior_FR-Gri",
+    "lat": 48.844,
+    "lon": 1.951,
+    "plots": {
+      "ensemble": [
+        {
+          "name": "ensemble_fluxlat_FR-Gri_day300.png",
+          "src": "assets/FR-Gri/ensemble/ensemble_fluxlat_FR-Gri_day300.png",
+          "category": "ensemble"
+        },
+        {
+          "name": "ensemble_fluxsens_FR-Gri_day300.png",
+          "src": "assets/FR-Gri/ensemble/ensemble_fluxsens_FR-Gri_day300.png",
+          "category": "ensemble"
+        },
+        {
+          "name": "ensemble_gppt_FR-Gri_day300.png",
+          "src": "assets/FR-Gri/ensemble/ensemble_gppt_FR-Gri_day300.png",
+          "category": "ensemble"
+        },
+        {
+          "name": "ensemble_neet_FR-Gri_day300.png",
+          "src": "assets/FR-Gri/ensemble/ensemble_neet_FR-Gri_day300.png",
+          "category": "ensemble"
+        }
+      ],
+      "PRIOR_orig": [
+        {
+          "name": "fluxlat_FR-Gri_PRIOR_orig_from_nc.png",
+          "src": "assets/FR-Gri/PRIOR_orig/fluxlat_FR-Gri_PRIOR_orig_from_nc.png",
+          "category": "PRIOR_orig"
+        },
+        {
+          "name": "fluxsens_FR-Gri_PRIOR_orig_from_nc.png",
+          "src": "assets/FR-Gri/PRIOR_orig/fluxsens_FR-Gri_PRIOR_orig_from_nc.png",
+          "category": "PRIOR_orig"
+        },
+        {
+          "name": "gppt_FR-Gri_PRIOR_orig_from_nc.png",
+          "src": "assets/FR-Gri/PRIOR_orig/gppt_FR-Gri_PRIOR_orig_from_nc.png",
+          "category": "PRIOR_orig"
+        },
+        {
+          "name": "neet_FR-Gri_PRIOR_orig_from_nc.png",
+          "src": "assets/FR-Gri/PRIOR_orig/neet_FR-Gri_PRIOR_orig_from_nc.png",
+          "category": "PRIOR_orig"
+        }
+      ],
+      "PRIOR_optY": [
+        {
+          "name": "fluxlat_FR-Gri_PRIOR_optY_from_nc.png",
+          "src": "assets/FR-Gri/PRIOR_optY/fluxlat_FR-Gri_PRIOR_optY_from_nc.png",
+          "category": "PRIOR_optY"
+        },
+        {
+          "name": "fluxsens_FR-Gri_PRIOR_optY_from_nc.png",
+          "src": "assets/FR-Gri/PRIOR_optY/fluxsens_FR-Gri_PRIOR_optY_from_nc.png",
+          "category": "PRIOR_optY"
+        },
+        {
+          "name": "gppt_FR-Gri_PRIOR_optY_from_nc.png",
+          "src": "assets/FR-Gri/PRIOR_optY/gppt_FR-Gri_PRIOR_optY_from_nc.png",
+          "category": "PRIOR_optY"
+        },
+        {
+          "name": "neet_FR-Gri_PRIOR_optY_from_nc.png",
+          "src": "assets/FR-Gri/PRIOR_optY/neet_FR-Gri_PRIOR_optY_from_nc.png",
+          "category": "PRIOR_optY"
+        }
+      ],
+      "PRIOR_optN": [
+        {
+          "name": "fluxlat_FR-Gri_PRIOR_optN_from_nc.png",
+          "src": "assets/FR-Gri/PRIOR_optN/fluxlat_FR-Gri_PRIOR_optN_from_nc.png",
+          "category": "PRIOR_optN"
+        },
+        {
+          "name": "fluxsens_FR-Gri_PRIOR_optN_from_nc.png",
+          "src": "assets/FR-Gri/PRIOR_optN/fluxsens_FR-Gri_PRIOR_optN_from_nc.png",
+          "category": "PRIOR_optN"
+        },
+        {
+          "name": "gppt_FR-Gri_PRIOR_optN_from_nc.png",
+          "src": "assets/FR-Gri/PRIOR_optN/gppt_FR-Gri_PRIOR_optN_from_nc.png",
+          "category": "PRIOR_optN"
+        },
+        {
+          "name": "neet_FR-Gri_PRIOR_optN_from_nc.png",
+          "src": "assets/FR-Gri/PRIOR_optN/neet_FR-Gri_PRIOR_optN_from_nc.png",
+          "category": "PRIOR_optN"
+        }
+      ]
+    }
+  },
+  "FR-Lam": {
+    "name": "FR-Lam",
+    "folder": "prior_FR-Lam",
+    "lat": 43.496,
+    "lon": 1.237,
+    "plots": {
+      "ensemble": [],
+      "PRIOR_orig": [],
+      "PRIOR_optY": [],
+      "PRIOR_optN": []
+    }
+  }
+};
+
+const CATEGORIES = [
+    ["ensemble", "Ensemble"],
+    ["PRIOR_orig", "PRIOR_orig"],
+    ["PRIOR_optY", "PRIOR_optY"],
+    ["PRIOR_optN", "PRIOR_optN"],
+];
+
+let currentSite = Object.keys(DATA)[0];
+let currentCategory = "ensemble";
+
+const map = L.map("map").setView([47.2, 4.5], 5);
+
+L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+    maxZoom: 19,
+    attribution: '&copy; OpenStreetMap contributors'
+}).addTo(map);
+
+const markers = {};
+
+function initMap() {
+    for (const [site, meta] of Object.entries(DATA)) {
+        const marker = L.marker([meta.lat, meta.lon]).addTo(map);
+        marker.bindPopup(`<b>${site}</b><br>${meta.folder}<br><button onclick="selectSite('${site}')">Open plots</button>`);
+        marker.on("click", () => selectSite(site));
+        markers[site] = marker;
+    }
+}
+
+function initSiteButtons() {
+    const container = document.getElementById("siteButtons");
+    container.innerHTML = "";
+
+    for (const site of Object.keys(DATA)) {
+        const btn = document.createElement("button");
+        btn.className = "site-button";
+        btn.id = "btn-" + site;
+        btn.innerText = site;
+        btn.onclick = () => selectSite(site);
+        container.appendChild(btn);
+    }
+}
+
+function selectSite(site) {
+    currentSite = site;
+    document.getElementById("searchBox").value = "";
+
+    const meta = DATA[site];
+    map.setView([meta.lat, meta.lon], 8);
+
+    if (markers[site]) {
+        markers[site].openPopup();
+    }
+
+    render();
+}
+
+function renderTabs() {
+    const tabs = document.getElementById("tabs");
+    tabs.innerHTML = "";
+
+    for (const [cat, label] of CATEGORIES) {
+        const n = DATA[currentSite].plots[cat] ? DATA[currentSite].plots[cat].length : 0;
+
+        const btn = document.createElement("button");
+        btn.className = "tab" + (cat === currentCategory ? " active" : "");
+        btn.innerText = `${label} (${n})`;
+        btn.onclick = () => {
+            currentCategory = cat;
+            render();
+        };
+        tabs.appendChild(btn);
+    }
+}
+
+function renderSiteButtons() {
+    for (const site of Object.keys(DATA)) {
+        const btn = document.getElementById("btn-" + site);
+        if (!btn) continue;
+        btn.className = "site-button" + (site === currentSite ? " active" : "");
+    }
+}
+
+function renderPlots() {
+    const container = document.getElementById("plots");
+    const search = document.getElementById("searchBox").value.toLowerCase().trim();
+
+    let plots = DATA[currentSite].plots[currentCategory] || [];
+
+    if (search) {
+        plots = plots.filter(p => p.name.toLowerCase().includes(search));
+    }
+
+    if (!plots.length) {
+        container.innerHTML = `<div class="empty">No plots found for ${currentSite} / ${currentCategory}.</div>`;
+        return;
+    }
+
+    let html = `<div class="grid">`;
+
+    for (const p of plots) {
+        html += `
+            <div class="card">
+                <img src="${p.src}" onclick="openModal('${p.src}')">
+                <div class="caption">${p.name}</div>
+            </div>
+        `;
+    }
+
+    html += `</div>`;
+    container.innerHTML = html;
+}
+
+function render() {
+    const meta = DATA[currentSite];
+
+    document.getElementById("siteTitle").innerText = currentSite;
+    document.getElementById("siteSubtitle").innerText =
+        `${meta.folder} | lat ${meta.lat}, lon ${meta.lon}`;
+
+    renderTabs();
+    renderSiteButtons();
+    renderPlots();
+}
+
+function openModal(src) {
+    document.getElementById("modalImg").src = src;
+    document.getElementById("modal").classList.add("show");
+}
+
+function closeModal() {
+    document.getElementById("modal").classList.remove("show");
+}
+
+initMap();
+initSiteButtons();
+render();
+</script>
+
+</body>
+</html>
