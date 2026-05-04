@@ -4,11 +4,7 @@
 <meta charset="utf-8">
 <title>ORCHIDAS Result Dashboard</title>
 
-<link
-  rel="stylesheet"
-  href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-/>
-
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
 <style>
@@ -20,239 +16,54 @@
     --blue: #2563eb;
     --border: #e5e7eb;
 }
-
-* {
-    box-sizing: border-box;
-}
-
-body {
-    margin: 0;
-    font-family: Arial, Helvetica, sans-serif;
-    background: var(--bg);
-    color: var(--text);
-}
-
-header {
-    background: #111827;
-    color: white;
-    padding: 16px 24px;
-}
-
-header h1 {
-    margin: 0;
-    font-size: 24px;
-}
-
-header p {
-    margin: 6px 0 0;
-    color: #d1d5db;
-    font-size: 14px;
-}
-
-.layout {
-    display: grid;
-    grid-template-columns: 440px 1fr;
-    height: calc(100vh - 75px);
-}
-
-.left {
-    display: flex;
-    flex-direction: column;
-    border-right: 1px solid var(--border);
-    background: var(--panel);
-}
-
-#map {
-    height: 52%;
-    min-height: 360px;
-    border-bottom: 1px solid var(--border);
-}
-
-.site-list {
-    padding: 16px;
-    overflow: auto;
-}
-
+* { box-sizing: border-box; }
+body { margin: 0; font-family: Arial, Helvetica, sans-serif; background: var(--bg); color: var(--text); }
+header { background: #111827; color: white; padding: 16px 24px; }
+header h1 { margin: 0; font-size: 24px; }
+header p { margin: 6px 0 0; color: #d1d5db; font-size: 14px; }
+.layout { display: grid; grid-template-columns: 440px 1fr; height: calc(100vh - 75px); }
+.left { display: flex; flex-direction: column; border-right: 1px solid var(--border); background: var(--panel); }
+#map { height: 42%; min-height: 300px; border-bottom: 1px solid var(--border); }
+.site-list { padding: 16px; overflow: auto; }
+.site-list h3 { margin-bottom: 8px; }
 .site-button {
-    display: block;
-    width: 100%;
-    text-align: left;
-    padding: 10px 12px;
-    margin-bottom: 8px;
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    background: white;
-    cursor: pointer;
-    font-weight: bold;
+    display: block; width: 100%; text-align: left; padding: 10px 12px; margin-bottom: 8px;
+    border: 1px solid var(--border); border-radius: 10px; background: white; cursor: pointer; font-weight: bold;
 }
-
-.site-button:hover {
-    border-color: var(--blue);
-}
-
-.site-button.active {
-    background: #eff6ff;
-    border-color: var(--blue);
-    color: var(--blue);
-}
-
-.right {
-    overflow: auto;
-    padding: 20px;
-}
-
-.panel {
-    background: var(--panel);
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    padding: 18px;
-    box-shadow: 0 1px 8px rgba(0,0,0,0.06);
-}
-
-.site-title {
-    font-size: 24px;
-    font-weight: bold;
-    margin-bottom: 4px;
-}
-
-.site-subtitle {
-    color: var(--muted);
-    margin-bottom: 16px;
-}
-
-.tabs {
-    display: flex;
-    gap: 8px;
-    flex-wrap: wrap;
-    margin-bottom: 18px;
-}
-
-.tab {
-    border: 1px solid var(--border);
-    background: #f9fafb;
-    padding: 8px 12px;
-    border-radius: 10px;
-    cursor: pointer;
-    font-weight: bold;
-}
-
-.tab.active {
-    background: var(--blue);
-    color: white;
-    border-color: var(--blue);
-}
-
-.search-row {
-    display: flex;
-    gap: 10px;
-    margin-bottom: 18px;
-}
-
-.search-row input {
-    flex: 1;
-    padding: 10px 12px;
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    font-size: 14px;
-}
-
-.grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(430px, 1fr));
-    gap: 18px;
-}
-
-.card {
-    border: 1px solid var(--border);
-    background: white;
-    border-radius: 14px;
-    padding: 10px;
-}
-
-.card img {
-    width: 100%;
-    border-radius: 10px;
-    cursor: zoom-in;
-    display: block;
-}
-
-.caption {
-    margin-top: 8px;
-    font-size: 13px;
-    color: var(--muted);
-    word-break: break-all;
-}
-
-.empty {
-    padding: 18px;
-    background: #fff7ed;
-    border: 1px solid #fed7aa;
-    color: #9a3412;
-    border-radius: 12px;
-    font-weight: bold;
-}
-
-.leaflet-popup-content {
-    font-size: 14px;
-}
-
-.modal {
-    display: none;
-    position: fixed;
-    z-index: 9999;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0,0,0,0.82);
-    align-items: center;
-    justify-content: center;
-    padding: 30px;
-}
-
-.modal img {
-    max-width: 95vw;
-    max-height: 90vh;
-    background: white;
-    border-radius: 10px;
-}
-
-.modal.show {
-    display: flex;
-}
-
-.close {
-    position: fixed;
-    top: 18px;
-    right: 26px;
-    color: white;
-    font-size: 34px;
-    font-weight: bold;
-    cursor: pointer;
-}
-
+.site-button:hover { border-color: var(--blue); }
+.site-button.active { background: #eff6ff; border-color: var(--blue); color: var(--blue); }
+.extra-button.active { background: #fef3c7; border-color: #f59e0b; color: #92400e; }
+.right { overflow: auto; padding: 20px; }
+.panel { background: var(--panel); border: 1px solid var(--border); border-radius: 16px; padding: 18px; box-shadow: 0 1px 8px rgba(0,0,0,0.06); }
+.site-title { font-size: 24px; font-weight: bold; margin-bottom: 4px; }
+.site-subtitle { color: var(--muted); margin-bottom: 16px; }
+.tabs { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 18px; }
+.tab { border: 1px solid var(--border); background: #f9fafb; padding: 8px 12px; border-radius: 10px; cursor: pointer; font-weight: bold; }
+.tab.active { background: var(--blue); color: white; border-color: var(--blue); }
+.search-row { display: flex; gap: 10px; margin-bottom: 18px; }
+.search-row input { flex: 1; padding: 10px 12px; border: 1px solid var(--border); border-radius: 10px; font-size: 14px; }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(430px, 1fr)); gap: 18px; }
+.card { border: 1px solid var(--border); background: white; border-radius: 14px; padding: 10px; }
+.card img { width: 100%; border-radius: 10px; cursor: zoom-in; display: block; }
+.caption { margin-top: 8px; font-size: 13px; color: var(--muted); word-break: break-all; }
+.empty { padding: 18px; background: #fff7ed; border: 1px solid #fed7aa; color: #9a3412; border-radius: 12px; font-weight: bold; }
+.modal { display: none; position: fixed; z-index: 9999; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.82); align-items: center; justify-content: center; padding: 30px; }
+.modal img { max-width: 95vw; max-height: 90vh; background: white; border-radius: 10px; }
+.modal.show { display: flex; }
+.close { position: fixed; top: 18px; right: 26px; color: white; font-size: 34px; font-weight: bold; cursor: pointer; }
+hr { border: none; border-top: 1px solid var(--border); margin: 18px 0; }
 @media (max-width: 1000px) {
-    .layout {
-        grid-template-columns: 1fr;
-        height: auto;
-    }
-
-    #map {
-        height: 420px;
-    }
-
-    .grid {
-        grid-template-columns: 1fr;
-    }
+    .layout { grid-template-columns: 1fr; height: auto; }
+    #map { height: 420px; }
+    .grid { grid-template-columns: 1fr; }
 }
 </style>
 </head>
 
 <body>
-
 <header>
     <h1>ORCHIDAS Result Dashboard</h1>
-    <p>Interactive site map with LHF/GPP and LAI/AGB plots generated from ORCHIDAS NetCDF outputs.</p>
+    <p>Interactive site map with prior plots and extra optimization outputs generated from ORCHIDAS NetCDF files.</p>
 </header>
 
 <div class="layout">
@@ -261,6 +72,9 @@ header p {
         <div class="site-list">
             <h3>Sites</h3>
             <div id="siteButtons"></div>
+            <hr>
+            <h3>Extra optimizations</h3>
+            <div id="extraButtons"></div>
         </div>
     </div>
 
@@ -268,13 +82,10 @@ header p {
         <div class="panel">
             <div class="site-title" id="siteTitle">Select a site</div>
             <div class="site-subtitle" id="siteSubtitle"></div>
-
             <div class="tabs" id="tabs"></div>
-
             <div class="search-row">
                 <input id="searchBox" placeholder="Filter plots, e.g. gppt, fluxlat, neet, lai, agb..." oninput="renderPlots()">
             </div>
-
             <div id="plots"></div>
         </div>
     </div>
@@ -287,728 +98,1106 @@ header p {
 
 <script>
 const DATA = {
-  "BE-Lon": {
-    "name": "BE-Lon",
-    "folder": "prior_BE-Lon",
-    "lat": 50.551,
-    "lon": 4.746,
-    "plots": {
-      "ensemble_LHF_GPP": [
-        {
-          "name": "ensemble_fluxlat_BE-Lon_day300.png",
-          "src": "assets/BE-Lon/ensemble_LHF_GPP/ensemble_fluxlat_BE-Lon_day300.png",
-          "category": "ensemble_LHF_GPP"
-        },
-        {
-          "name": "ensemble_fluxsens_BE-Lon_day300.png",
-          "src": "assets/BE-Lon/ensemble_LHF_GPP/ensemble_fluxsens_BE-Lon_day300.png",
-          "category": "ensemble_LHF_GPP"
-        },
-        {
-          "name": "ensemble_gppt_BE-Lon_day300.png",
-          "src": "assets/BE-Lon/ensemble_LHF_GPP/ensemble_gppt_BE-Lon_day300.png",
-          "category": "ensemble_LHF_GPP"
-        },
-        {
-          "name": "ensemble_neet_BE-Lon_day300.png",
-          "src": "assets/BE-Lon/ensemble_LHF_GPP/ensemble_neet_BE-Lon_day300.png",
-          "category": "ensemble_LHF_GPP"
-        }
-      ],
-      "ensemble_LAIAGB": [
-        {
-          "name": "ensemble_agb_BE-Lon_day300.png",
-          "src": "assets/BE-Lon/ensemble_LAIAGB/ensemble_agb_BE-Lon_day300.png",
-          "category": "ensemble_LAIAGB"
-        },
-        {
-          "name": "ensemble_lai_stics_BE-Lon_day300.png",
-          "src": "assets/BE-Lon/ensemble_LAIAGB/ensemble_lai_stics_BE-Lon_day300.png",
-          "category": "ensemble_LAIAGB"
-        }
-      ],
-      "PRIOR_orig": [
-        {
-          "name": "fluxlat_BE-Lon_PRIOR_orig_from_nc.png",
-          "src": "assets/BE-Lon/PRIOR_orig/fluxlat_BE-Lon_PRIOR_orig_from_nc.png",
-          "category": "PRIOR_orig"
-        },
-        {
-          "name": "fluxsens_BE-Lon_PRIOR_orig_from_nc.png",
-          "src": "assets/BE-Lon/PRIOR_orig/fluxsens_BE-Lon_PRIOR_orig_from_nc.png",
-          "category": "PRIOR_orig"
-        },
-        {
-          "name": "gppt_BE-Lon_PRIOR_orig_from_nc.png",
-          "src": "assets/BE-Lon/PRIOR_orig/gppt_BE-Lon_PRIOR_orig_from_nc.png",
-          "category": "PRIOR_orig"
-        },
-        {
-          "name": "neet_BE-Lon_PRIOR_orig_from_nc.png",
-          "src": "assets/BE-Lon/PRIOR_orig/neet_BE-Lon_PRIOR_orig_from_nc.png",
-          "category": "PRIOR_orig"
-        }
-      ],
-      "PRIOR_optY": [
-        {
-          "name": "fluxlat_BE-Lon_PRIOR_optY_from_nc.png",
-          "src": "assets/BE-Lon/PRIOR_optY/fluxlat_BE-Lon_PRIOR_optY_from_nc.png",
-          "category": "PRIOR_optY"
-        },
-        {
-          "name": "fluxsens_BE-Lon_PRIOR_optY_from_nc.png",
-          "src": "assets/BE-Lon/PRIOR_optY/fluxsens_BE-Lon_PRIOR_optY_from_nc.png",
-          "category": "PRIOR_optY"
-        },
-        {
-          "name": "gppt_BE-Lon_PRIOR_optY_from_nc.png",
-          "src": "assets/BE-Lon/PRIOR_optY/gppt_BE-Lon_PRIOR_optY_from_nc.png",
-          "category": "PRIOR_optY"
-        },
-        {
-          "name": "neet_BE-Lon_PRIOR_optY_from_nc.png",
-          "src": "assets/BE-Lon/PRIOR_optY/neet_BE-Lon_PRIOR_optY_from_nc.png",
-          "category": "PRIOR_optY"
-        }
-      ],
-      "PRIOR_optN": [
-        {
-          "name": "fluxlat_BE-Lon_PRIOR_optN_from_nc.png",
-          "src": "assets/BE-Lon/PRIOR_optN/fluxlat_BE-Lon_PRIOR_optN_from_nc.png",
-          "category": "PRIOR_optN"
-        },
-        {
-          "name": "fluxsens_BE-Lon_PRIOR_optN_from_nc.png",
-          "src": "assets/BE-Lon/PRIOR_optN/fluxsens_BE-Lon_PRIOR_optN_from_nc.png",
-          "category": "PRIOR_optN"
-        },
-        {
-          "name": "gppt_BE-Lon_PRIOR_optN_from_nc.png",
-          "src": "assets/BE-Lon/PRIOR_optN/gppt_BE-Lon_PRIOR_optN_from_nc.png",
-          "category": "PRIOR_optN"
-        },
-        {
-          "name": "neet_BE-Lon_PRIOR_optN_from_nc.png",
-          "src": "assets/BE-Lon/PRIOR_optN/neet_BE-Lon_PRIOR_optN_from_nc.png",
-          "category": "PRIOR_optN"
-        }
-      ],
-      "PRIOR_orig_LAIAGB": [
-        {
-          "name": "agb_BE-Lon_PRIOR_orig_LAIAGB_from_nc.png",
-          "src": "assets/BE-Lon/PRIOR_orig_LAIAGB/agb_BE-Lon_PRIOR_orig_LAIAGB_from_nc.png",
-          "category": "PRIOR_orig_LAIAGB"
-        },
-        {
-          "name": "lai_stics_BE-Lon_PRIOR_orig_LAIAGB_from_nc.png",
-          "src": "assets/BE-Lon/PRIOR_orig_LAIAGB/lai_stics_BE-Lon_PRIOR_orig_LAIAGB_from_nc.png",
-          "category": "PRIOR_orig_LAIAGB"
-        }
-      ],
-      "PRIOR_optY_LAIAGB": [
-        {
-          "name": "agb_BE-Lon_PRIOR_optY_LAIAGB_from_nc.png",
-          "src": "assets/BE-Lon/PRIOR_optY_LAIAGB/agb_BE-Lon_PRIOR_optY_LAIAGB_from_nc.png",
-          "category": "PRIOR_optY_LAIAGB"
-        },
-        {
-          "name": "lai_stics_BE-Lon_PRIOR_optY_LAIAGB_from_nc.png",
-          "src": "assets/BE-Lon/PRIOR_optY_LAIAGB/lai_stics_BE-Lon_PRIOR_optY_LAIAGB_from_nc.png",
-          "category": "PRIOR_optY_LAIAGB"
-        }
-      ],
-      "PRIOR_optN_LAIAGB": [
-        {
-          "name": "agb_BE-Lon_PRIOR_optN_LAIAGB_from_nc.png",
-          "src": "assets/BE-Lon/PRIOR_optN_LAIAGB/agb_BE-Lon_PRIOR_optN_LAIAGB_from_nc.png",
-          "category": "PRIOR_optN_LAIAGB"
-        },
-        {
-          "name": "lai_stics_BE-Lon_PRIOR_optN_LAIAGB_from_nc.png",
-          "src": "assets/BE-Lon/PRIOR_optN_LAIAGB/lai_stics_BE-Lon_PRIOR_optN_LAIAGB_from_nc.png",
-          "category": "PRIOR_optN_LAIAGB"
-        }
-      ]
+  "sites": {
+    "BE-Lon": {
+      "name": "BE-Lon",
+      "type": "site",
+      "folder": "prior_BE-Lon",
+      "lat": 50.551,
+      "lon": 4.746,
+      "plots": {
+        "ensemble_LHF_GPP": [
+          {
+            "name": "ensemble_fluxlat_BE-Lon_day0.png",
+            "src": "assets/sites/BE-Lon/ensemble_LHF_GPP/ensemble_fluxlat_BE-Lon_day0.png",
+            "category": "ensemble_LHF_GPP"
+          },
+          {
+            "name": "ensemble_fluxlat_BE-Lon_day300.png",
+            "src": "assets/sites/BE-Lon/ensemble_LHF_GPP/ensemble_fluxlat_BE-Lon_day300.png",
+            "category": "ensemble_LHF_GPP"
+          },
+          {
+            "name": "ensemble_fluxsens_BE-Lon_day0.png",
+            "src": "assets/sites/BE-Lon/ensemble_LHF_GPP/ensemble_fluxsens_BE-Lon_day0.png",
+            "category": "ensemble_LHF_GPP"
+          },
+          {
+            "name": "ensemble_fluxsens_BE-Lon_day300.png",
+            "src": "assets/sites/BE-Lon/ensemble_LHF_GPP/ensemble_fluxsens_BE-Lon_day300.png",
+            "category": "ensemble_LHF_GPP"
+          },
+          {
+            "name": "ensemble_gppt_BE-Lon_day0.png",
+            "src": "assets/sites/BE-Lon/ensemble_LHF_GPP/ensemble_gppt_BE-Lon_day0.png",
+            "category": "ensemble_LHF_GPP"
+          },
+          {
+            "name": "ensemble_gppt_BE-Lon_day300.png",
+            "src": "assets/sites/BE-Lon/ensemble_LHF_GPP/ensemble_gppt_BE-Lon_day300.png",
+            "category": "ensemble_LHF_GPP"
+          },
+          {
+            "name": "ensemble_neet_BE-Lon_day0.png",
+            "src": "assets/sites/BE-Lon/ensemble_LHF_GPP/ensemble_neet_BE-Lon_day0.png",
+            "category": "ensemble_LHF_GPP"
+          },
+          {
+            "name": "ensemble_neet_BE-Lon_day300.png",
+            "src": "assets/sites/BE-Lon/ensemble_LHF_GPP/ensemble_neet_BE-Lon_day300.png",
+            "category": "ensemble_LHF_GPP"
+          }
+        ],
+        "ensemble_LAIAGB": [
+          {
+            "name": "ensemble_agb_BE-Lon_day0.png",
+            "src": "assets/sites/BE-Lon/ensemble_LAIAGB/ensemble_agb_BE-Lon_day0.png",
+            "category": "ensemble_LAIAGB"
+          },
+          {
+            "name": "ensemble_agb_BE-Lon_day300.png",
+            "src": "assets/sites/BE-Lon/ensemble_LAIAGB/ensemble_agb_BE-Lon_day300.png",
+            "category": "ensemble_LAIAGB"
+          },
+          {
+            "name": "ensemble_lai_stics_BE-Lon_day0.png",
+            "src": "assets/sites/BE-Lon/ensemble_LAIAGB/ensemble_lai_stics_BE-Lon_day0.png",
+            "category": "ensemble_LAIAGB"
+          },
+          {
+            "name": "ensemble_lai_stics_BE-Lon_day300.png",
+            "src": "assets/sites/BE-Lon/ensemble_LAIAGB/ensemble_lai_stics_BE-Lon_day300.png",
+            "category": "ensemble_LAIAGB"
+          }
+        ],
+        "PRIOR_orig": [
+          {
+            "name": "fluxlat_BE-Lon_PRIOR_orig_from_nc.png",
+            "src": "assets/sites/BE-Lon/PRIOR_orig/fluxlat_BE-Lon_PRIOR_orig_from_nc.png",
+            "category": "PRIOR_orig"
+          },
+          {
+            "name": "fluxsens_BE-Lon_PRIOR_orig_from_nc.png",
+            "src": "assets/sites/BE-Lon/PRIOR_orig/fluxsens_BE-Lon_PRIOR_orig_from_nc.png",
+            "category": "PRIOR_orig"
+          },
+          {
+            "name": "gppt_BE-Lon_PRIOR_orig_from_nc.png",
+            "src": "assets/sites/BE-Lon/PRIOR_orig/gppt_BE-Lon_PRIOR_orig_from_nc.png",
+            "category": "PRIOR_orig"
+          },
+          {
+            "name": "neet_BE-Lon_PRIOR_orig_from_nc.png",
+            "src": "assets/sites/BE-Lon/PRIOR_orig/neet_BE-Lon_PRIOR_orig_from_nc.png",
+            "category": "PRIOR_orig"
+          }
+        ],
+        "PRIOR_optY": [
+          {
+            "name": "fluxlat_BE-Lon_PRIOR_optY_from_nc.png",
+            "src": "assets/sites/BE-Lon/PRIOR_optY/fluxlat_BE-Lon_PRIOR_optY_from_nc.png",
+            "category": "PRIOR_optY"
+          },
+          {
+            "name": "fluxsens_BE-Lon_PRIOR_optY_from_nc.png",
+            "src": "assets/sites/BE-Lon/PRIOR_optY/fluxsens_BE-Lon_PRIOR_optY_from_nc.png",
+            "category": "PRIOR_optY"
+          },
+          {
+            "name": "gppt_BE-Lon_PRIOR_optY_from_nc.png",
+            "src": "assets/sites/BE-Lon/PRIOR_optY/gppt_BE-Lon_PRIOR_optY_from_nc.png",
+            "category": "PRIOR_optY"
+          },
+          {
+            "name": "neet_BE-Lon_PRIOR_optY_from_nc.png",
+            "src": "assets/sites/BE-Lon/PRIOR_optY/neet_BE-Lon_PRIOR_optY_from_nc.png",
+            "category": "PRIOR_optY"
+          }
+        ],
+        "PRIOR_optN": [
+          {
+            "name": "fluxlat_BE-Lon_PRIOR_optN_from_nc.png",
+            "src": "assets/sites/BE-Lon/PRIOR_optN/fluxlat_BE-Lon_PRIOR_optN_from_nc.png",
+            "category": "PRIOR_optN"
+          },
+          {
+            "name": "fluxsens_BE-Lon_PRIOR_optN_from_nc.png",
+            "src": "assets/sites/BE-Lon/PRIOR_optN/fluxsens_BE-Lon_PRIOR_optN_from_nc.png",
+            "category": "PRIOR_optN"
+          },
+          {
+            "name": "gppt_BE-Lon_PRIOR_optN_from_nc.png",
+            "src": "assets/sites/BE-Lon/PRIOR_optN/gppt_BE-Lon_PRIOR_optN_from_nc.png",
+            "category": "PRIOR_optN"
+          },
+          {
+            "name": "neet_BE-Lon_PRIOR_optN_from_nc.png",
+            "src": "assets/sites/BE-Lon/PRIOR_optN/neet_BE-Lon_PRIOR_optN_from_nc.png",
+            "category": "PRIOR_optN"
+          }
+        ],
+        "PRIOR_orig_LAIAGB": [
+          {
+            "name": "agb_BE-Lon_PRIOR_orig_LAIAGB_from_nc.png",
+            "src": "assets/sites/BE-Lon/PRIOR_orig_LAIAGB/agb_BE-Lon_PRIOR_orig_LAIAGB_from_nc.png",
+            "category": "PRIOR_orig_LAIAGB"
+          },
+          {
+            "name": "lai_stics_BE-Lon_PRIOR_orig_LAIAGB_from_nc.png",
+            "src": "assets/sites/BE-Lon/PRIOR_orig_LAIAGB/lai_stics_BE-Lon_PRIOR_orig_LAIAGB_from_nc.png",
+            "category": "PRIOR_orig_LAIAGB"
+          }
+        ],
+        "PRIOR_optY_LAIAGB": [
+          {
+            "name": "agb_BE-Lon_PRIOR_optY_LAIAGB_from_nc.png",
+            "src": "assets/sites/BE-Lon/PRIOR_optY_LAIAGB/agb_BE-Lon_PRIOR_optY_LAIAGB_from_nc.png",
+            "category": "PRIOR_optY_LAIAGB"
+          },
+          {
+            "name": "lai_stics_BE-Lon_PRIOR_optY_LAIAGB_from_nc.png",
+            "src": "assets/sites/BE-Lon/PRIOR_optY_LAIAGB/lai_stics_BE-Lon_PRIOR_optY_LAIAGB_from_nc.png",
+            "category": "PRIOR_optY_LAIAGB"
+          }
+        ],
+        "PRIOR_optN_LAIAGB": [
+          {
+            "name": "agb_BE-Lon_PRIOR_optN_LAIAGB_from_nc.png",
+            "src": "assets/sites/BE-Lon/PRIOR_optN_LAIAGB/agb_BE-Lon_PRIOR_optN_LAIAGB_from_nc.png",
+            "category": "PRIOR_optN_LAIAGB"
+          },
+          {
+            "name": "lai_stics_BE-Lon_PRIOR_optN_LAIAGB_from_nc.png",
+            "src": "assets/sites/BE-Lon/PRIOR_optN_LAIAGB/lai_stics_BE-Lon_PRIOR_optN_LAIAGB_from_nc.png",
+            "category": "PRIOR_optN_LAIAGB"
+          }
+        ]
+      }
+    },
+    "DE-Kli": {
+      "name": "DE-Kli",
+      "type": "site",
+      "folder": "prior_DE-Kli",
+      "lat": 50.893,
+      "lon": 13.522,
+      "plots": {
+        "ensemble_LHF_GPP": [
+          {
+            "name": "ensemble_fluxlat_DE-Kli_day0.png",
+            "src": "assets/sites/DE-Kli/ensemble_LHF_GPP/ensemble_fluxlat_DE-Kli_day0.png",
+            "category": "ensemble_LHF_GPP"
+          },
+          {
+            "name": "ensemble_fluxlat_DE-Kli_day300.png",
+            "src": "assets/sites/DE-Kli/ensemble_LHF_GPP/ensemble_fluxlat_DE-Kli_day300.png",
+            "category": "ensemble_LHF_GPP"
+          },
+          {
+            "name": "ensemble_fluxsens_DE-Kli_day0.png",
+            "src": "assets/sites/DE-Kli/ensemble_LHF_GPP/ensemble_fluxsens_DE-Kli_day0.png",
+            "category": "ensemble_LHF_GPP"
+          },
+          {
+            "name": "ensemble_fluxsens_DE-Kli_day300.png",
+            "src": "assets/sites/DE-Kli/ensemble_LHF_GPP/ensemble_fluxsens_DE-Kli_day300.png",
+            "category": "ensemble_LHF_GPP"
+          },
+          {
+            "name": "ensemble_gppt_DE-Kli_day0.png",
+            "src": "assets/sites/DE-Kli/ensemble_LHF_GPP/ensemble_gppt_DE-Kli_day0.png",
+            "category": "ensemble_LHF_GPP"
+          },
+          {
+            "name": "ensemble_gppt_DE-Kli_day300.png",
+            "src": "assets/sites/DE-Kli/ensemble_LHF_GPP/ensemble_gppt_DE-Kli_day300.png",
+            "category": "ensemble_LHF_GPP"
+          },
+          {
+            "name": "ensemble_neet_DE-Kli_day0.png",
+            "src": "assets/sites/DE-Kli/ensemble_LHF_GPP/ensemble_neet_DE-Kli_day0.png",
+            "category": "ensemble_LHF_GPP"
+          },
+          {
+            "name": "ensemble_neet_DE-Kli_day300.png",
+            "src": "assets/sites/DE-Kli/ensemble_LHF_GPP/ensemble_neet_DE-Kli_day300.png",
+            "category": "ensemble_LHF_GPP"
+          }
+        ],
+        "ensemble_LAIAGB": [
+          {
+            "name": "ensemble_agb_DE-Kli_day0.png",
+            "src": "assets/sites/DE-Kli/ensemble_LAIAGB/ensemble_agb_DE-Kli_day0.png",
+            "category": "ensemble_LAIAGB"
+          },
+          {
+            "name": "ensemble_agb_DE-Kli_day300.png",
+            "src": "assets/sites/DE-Kli/ensemble_LAIAGB/ensemble_agb_DE-Kli_day300.png",
+            "category": "ensemble_LAIAGB"
+          },
+          {
+            "name": "ensemble_lai_stics_DE-Kli_day0.png",
+            "src": "assets/sites/DE-Kli/ensemble_LAIAGB/ensemble_lai_stics_DE-Kli_day0.png",
+            "category": "ensemble_LAIAGB"
+          },
+          {
+            "name": "ensemble_lai_stics_DE-Kli_day300.png",
+            "src": "assets/sites/DE-Kli/ensemble_LAIAGB/ensemble_lai_stics_DE-Kli_day300.png",
+            "category": "ensemble_LAIAGB"
+          }
+        ],
+        "PRIOR_orig": [
+          {
+            "name": "fluxlat_DE-Kli_PRIOR_orig_from_nc.png",
+            "src": "assets/sites/DE-Kli/PRIOR_orig/fluxlat_DE-Kli_PRIOR_orig_from_nc.png",
+            "category": "PRIOR_orig"
+          },
+          {
+            "name": "fluxsens_DE-Kli_PRIOR_orig_from_nc.png",
+            "src": "assets/sites/DE-Kli/PRIOR_orig/fluxsens_DE-Kli_PRIOR_orig_from_nc.png",
+            "category": "PRIOR_orig"
+          },
+          {
+            "name": "gppt_DE-Kli_PRIOR_orig_from_nc.png",
+            "src": "assets/sites/DE-Kli/PRIOR_orig/gppt_DE-Kli_PRIOR_orig_from_nc.png",
+            "category": "PRIOR_orig"
+          },
+          {
+            "name": "neet_DE-Kli_PRIOR_orig_from_nc.png",
+            "src": "assets/sites/DE-Kli/PRIOR_orig/neet_DE-Kli_PRIOR_orig_from_nc.png",
+            "category": "PRIOR_orig"
+          }
+        ],
+        "PRIOR_optY": [
+          {
+            "name": "fluxlat_DE-Kli_PRIOR_optY_from_nc.png",
+            "src": "assets/sites/DE-Kli/PRIOR_optY/fluxlat_DE-Kli_PRIOR_optY_from_nc.png",
+            "category": "PRIOR_optY"
+          },
+          {
+            "name": "fluxsens_DE-Kli_PRIOR_optY_from_nc.png",
+            "src": "assets/sites/DE-Kli/PRIOR_optY/fluxsens_DE-Kli_PRIOR_optY_from_nc.png",
+            "category": "PRIOR_optY"
+          },
+          {
+            "name": "gppt_DE-Kli_PRIOR_optY_from_nc.png",
+            "src": "assets/sites/DE-Kli/PRIOR_optY/gppt_DE-Kli_PRIOR_optY_from_nc.png",
+            "category": "PRIOR_optY"
+          },
+          {
+            "name": "neet_DE-Kli_PRIOR_optY_from_nc.png",
+            "src": "assets/sites/DE-Kli/PRIOR_optY/neet_DE-Kli_PRIOR_optY_from_nc.png",
+            "category": "PRIOR_optY"
+          }
+        ],
+        "PRIOR_optN": [
+          {
+            "name": "fluxlat_DE-Kli_PRIOR_optN_from_nc.png",
+            "src": "assets/sites/DE-Kli/PRIOR_optN/fluxlat_DE-Kli_PRIOR_optN_from_nc.png",
+            "category": "PRIOR_optN"
+          },
+          {
+            "name": "fluxsens_DE-Kli_PRIOR_optN_from_nc.png",
+            "src": "assets/sites/DE-Kli/PRIOR_optN/fluxsens_DE-Kli_PRIOR_optN_from_nc.png",
+            "category": "PRIOR_optN"
+          },
+          {
+            "name": "gppt_DE-Kli_PRIOR_optN_from_nc.png",
+            "src": "assets/sites/DE-Kli/PRIOR_optN/gppt_DE-Kli_PRIOR_optN_from_nc.png",
+            "category": "PRIOR_optN"
+          },
+          {
+            "name": "neet_DE-Kli_PRIOR_optN_from_nc.png",
+            "src": "assets/sites/DE-Kli/PRIOR_optN/neet_DE-Kli_PRIOR_optN_from_nc.png",
+            "category": "PRIOR_optN"
+          }
+        ],
+        "PRIOR_orig_LAIAGB": [
+          {
+            "name": "agb_DE-Kli_PRIOR_orig_LAIAGB_from_nc.png",
+            "src": "assets/sites/DE-Kli/PRIOR_orig_LAIAGB/agb_DE-Kli_PRIOR_orig_LAIAGB_from_nc.png",
+            "category": "PRIOR_orig_LAIAGB"
+          },
+          {
+            "name": "lai_stics_DE-Kli_PRIOR_orig_LAIAGB_from_nc.png",
+            "src": "assets/sites/DE-Kli/PRIOR_orig_LAIAGB/lai_stics_DE-Kli_PRIOR_orig_LAIAGB_from_nc.png",
+            "category": "PRIOR_orig_LAIAGB"
+          }
+        ],
+        "PRIOR_optY_LAIAGB": [
+          {
+            "name": "agb_DE-Kli_PRIOR_optY_LAIAGB_from_nc.png",
+            "src": "assets/sites/DE-Kli/PRIOR_optY_LAIAGB/agb_DE-Kli_PRIOR_optY_LAIAGB_from_nc.png",
+            "category": "PRIOR_optY_LAIAGB"
+          },
+          {
+            "name": "lai_stics_DE-Kli_PRIOR_optY_LAIAGB_from_nc.png",
+            "src": "assets/sites/DE-Kli/PRIOR_optY_LAIAGB/lai_stics_DE-Kli_PRIOR_optY_LAIAGB_from_nc.png",
+            "category": "PRIOR_optY_LAIAGB"
+          }
+        ],
+        "PRIOR_optN_LAIAGB": [
+          {
+            "name": "agb_DE-Kli_PRIOR_optN_LAIAGB_from_nc.png",
+            "src": "assets/sites/DE-Kli/PRIOR_optN_LAIAGB/agb_DE-Kli_PRIOR_optN_LAIAGB_from_nc.png",
+            "category": "PRIOR_optN_LAIAGB"
+          },
+          {
+            "name": "lai_stics_DE-Kli_PRIOR_optN_LAIAGB_from_nc.png",
+            "src": "assets/sites/DE-Kli/PRIOR_optN_LAIAGB/lai_stics_DE-Kli_PRIOR_optN_LAIAGB_from_nc.png",
+            "category": "PRIOR_optN_LAIAGB"
+          }
+        ]
+      }
+    },
+    "FR-Aur": {
+      "name": "FR-Aur",
+      "type": "site",
+      "folder": "prior_FR-Aur",
+      "lat": 43.549,
+      "lon": 1.106,
+      "plots": {
+        "ensemble_LHF_GPP": [
+          {
+            "name": "ensemble_fluxlat_FR-Aur_day0.png",
+            "src": "assets/sites/FR-Aur/ensemble_LHF_GPP/ensemble_fluxlat_FR-Aur_day0.png",
+            "category": "ensemble_LHF_GPP"
+          },
+          {
+            "name": "ensemble_fluxlat_FR-Aur_day300.png",
+            "src": "assets/sites/FR-Aur/ensemble_LHF_GPP/ensemble_fluxlat_FR-Aur_day300.png",
+            "category": "ensemble_LHF_GPP"
+          },
+          {
+            "name": "ensemble_fluxsens_FR-Aur_day0.png",
+            "src": "assets/sites/FR-Aur/ensemble_LHF_GPP/ensemble_fluxsens_FR-Aur_day0.png",
+            "category": "ensemble_LHF_GPP"
+          },
+          {
+            "name": "ensemble_fluxsens_FR-Aur_day300.png",
+            "src": "assets/sites/FR-Aur/ensemble_LHF_GPP/ensemble_fluxsens_FR-Aur_day300.png",
+            "category": "ensemble_LHF_GPP"
+          },
+          {
+            "name": "ensemble_gppt_FR-Aur_day0.png",
+            "src": "assets/sites/FR-Aur/ensemble_LHF_GPP/ensemble_gppt_FR-Aur_day0.png",
+            "category": "ensemble_LHF_GPP"
+          },
+          {
+            "name": "ensemble_gppt_FR-Aur_day300.png",
+            "src": "assets/sites/FR-Aur/ensemble_LHF_GPP/ensemble_gppt_FR-Aur_day300.png",
+            "category": "ensemble_LHF_GPP"
+          },
+          {
+            "name": "ensemble_neet_FR-Aur_day0.png",
+            "src": "assets/sites/FR-Aur/ensemble_LHF_GPP/ensemble_neet_FR-Aur_day0.png",
+            "category": "ensemble_LHF_GPP"
+          },
+          {
+            "name": "ensemble_neet_FR-Aur_day300.png",
+            "src": "assets/sites/FR-Aur/ensemble_LHF_GPP/ensemble_neet_FR-Aur_day300.png",
+            "category": "ensemble_LHF_GPP"
+          }
+        ],
+        "ensemble_LAIAGB": [
+          {
+            "name": "ensemble_agb_FR-Aur_day0.png",
+            "src": "assets/sites/FR-Aur/ensemble_LAIAGB/ensemble_agb_FR-Aur_day0.png",
+            "category": "ensemble_LAIAGB"
+          },
+          {
+            "name": "ensemble_agb_FR-Aur_day300.png",
+            "src": "assets/sites/FR-Aur/ensemble_LAIAGB/ensemble_agb_FR-Aur_day300.png",
+            "category": "ensemble_LAIAGB"
+          },
+          {
+            "name": "ensemble_lai_stics_FR-Aur_day0.png",
+            "src": "assets/sites/FR-Aur/ensemble_LAIAGB/ensemble_lai_stics_FR-Aur_day0.png",
+            "category": "ensemble_LAIAGB"
+          },
+          {
+            "name": "ensemble_lai_stics_FR-Aur_day300.png",
+            "src": "assets/sites/FR-Aur/ensemble_LAIAGB/ensemble_lai_stics_FR-Aur_day300.png",
+            "category": "ensemble_LAIAGB"
+          }
+        ],
+        "PRIOR_orig": [
+          {
+            "name": "fluxlat_FR-Aur_PRIOR_orig_from_nc.png",
+            "src": "assets/sites/FR-Aur/PRIOR_orig/fluxlat_FR-Aur_PRIOR_orig_from_nc.png",
+            "category": "PRIOR_orig"
+          },
+          {
+            "name": "fluxsens_FR-Aur_PRIOR_orig_from_nc.png",
+            "src": "assets/sites/FR-Aur/PRIOR_orig/fluxsens_FR-Aur_PRIOR_orig_from_nc.png",
+            "category": "PRIOR_orig"
+          },
+          {
+            "name": "gppt_FR-Aur_PRIOR_orig_from_nc.png",
+            "src": "assets/sites/FR-Aur/PRIOR_orig/gppt_FR-Aur_PRIOR_orig_from_nc.png",
+            "category": "PRIOR_orig"
+          },
+          {
+            "name": "neet_FR-Aur_PRIOR_orig_from_nc.png",
+            "src": "assets/sites/FR-Aur/PRIOR_orig/neet_FR-Aur_PRIOR_orig_from_nc.png",
+            "category": "PRIOR_orig"
+          }
+        ],
+        "PRIOR_optY": [
+          {
+            "name": "fluxlat_FR-Aur_PRIOR_optY_from_nc.png",
+            "src": "assets/sites/FR-Aur/PRIOR_optY/fluxlat_FR-Aur_PRIOR_optY_from_nc.png",
+            "category": "PRIOR_optY"
+          },
+          {
+            "name": "fluxsens_FR-Aur_PRIOR_optY_from_nc.png",
+            "src": "assets/sites/FR-Aur/PRIOR_optY/fluxsens_FR-Aur_PRIOR_optY_from_nc.png",
+            "category": "PRIOR_optY"
+          },
+          {
+            "name": "gppt_FR-Aur_PRIOR_optY_from_nc.png",
+            "src": "assets/sites/FR-Aur/PRIOR_optY/gppt_FR-Aur_PRIOR_optY_from_nc.png",
+            "category": "PRIOR_optY"
+          },
+          {
+            "name": "neet_FR-Aur_PRIOR_optY_from_nc.png",
+            "src": "assets/sites/FR-Aur/PRIOR_optY/neet_FR-Aur_PRIOR_optY_from_nc.png",
+            "category": "PRIOR_optY"
+          }
+        ],
+        "PRIOR_optN": [
+          {
+            "name": "fluxlat_FR-Aur_PRIOR_optN_from_nc.png",
+            "src": "assets/sites/FR-Aur/PRIOR_optN/fluxlat_FR-Aur_PRIOR_optN_from_nc.png",
+            "category": "PRIOR_optN"
+          },
+          {
+            "name": "fluxsens_FR-Aur_PRIOR_optN_from_nc.png",
+            "src": "assets/sites/FR-Aur/PRIOR_optN/fluxsens_FR-Aur_PRIOR_optN_from_nc.png",
+            "category": "PRIOR_optN"
+          },
+          {
+            "name": "gppt_FR-Aur_PRIOR_optN_from_nc.png",
+            "src": "assets/sites/FR-Aur/PRIOR_optN/gppt_FR-Aur_PRIOR_optN_from_nc.png",
+            "category": "PRIOR_optN"
+          },
+          {
+            "name": "neet_FR-Aur_PRIOR_optN_from_nc.png",
+            "src": "assets/sites/FR-Aur/PRIOR_optN/neet_FR-Aur_PRIOR_optN_from_nc.png",
+            "category": "PRIOR_optN"
+          }
+        ],
+        "PRIOR_orig_LAIAGB": [
+          {
+            "name": "agb_FR-Aur_PRIOR_orig_LAIAGB_from_nc.png",
+            "src": "assets/sites/FR-Aur/PRIOR_orig_LAIAGB/agb_FR-Aur_PRIOR_orig_LAIAGB_from_nc.png",
+            "category": "PRIOR_orig_LAIAGB"
+          },
+          {
+            "name": "lai_stics_FR-Aur_PRIOR_orig_LAIAGB_from_nc.png",
+            "src": "assets/sites/FR-Aur/PRIOR_orig_LAIAGB/lai_stics_FR-Aur_PRIOR_orig_LAIAGB_from_nc.png",
+            "category": "PRIOR_orig_LAIAGB"
+          }
+        ],
+        "PRIOR_optY_LAIAGB": [
+          {
+            "name": "agb_FR-Aur_PRIOR_optY_LAIAGB_from_nc.png",
+            "src": "assets/sites/FR-Aur/PRIOR_optY_LAIAGB/agb_FR-Aur_PRIOR_optY_LAIAGB_from_nc.png",
+            "category": "PRIOR_optY_LAIAGB"
+          },
+          {
+            "name": "lai_stics_FR-Aur_PRIOR_optY_LAIAGB_from_nc.png",
+            "src": "assets/sites/FR-Aur/PRIOR_optY_LAIAGB/lai_stics_FR-Aur_PRIOR_optY_LAIAGB_from_nc.png",
+            "category": "PRIOR_optY_LAIAGB"
+          }
+        ],
+        "PRIOR_optN_LAIAGB": [
+          {
+            "name": "agb_FR-Aur_PRIOR_optN_LAIAGB_from_nc.png",
+            "src": "assets/sites/FR-Aur/PRIOR_optN_LAIAGB/agb_FR-Aur_PRIOR_optN_LAIAGB_from_nc.png",
+            "category": "PRIOR_optN_LAIAGB"
+          },
+          {
+            "name": "lai_stics_FR-Aur_PRIOR_optN_LAIAGB_from_nc.png",
+            "src": "assets/sites/FR-Aur/PRIOR_optN_LAIAGB/lai_stics_FR-Aur_PRIOR_optN_LAIAGB_from_nc.png",
+            "category": "PRIOR_optN_LAIAGB"
+          }
+        ]
+      }
+    },
+    "FR-Gri": {
+      "name": "FR-Gri",
+      "type": "site",
+      "folder": "prior_FR-Gri",
+      "lat": 48.844,
+      "lon": 1.951,
+      "plots": {
+        "ensemble_LHF_GPP": [
+          {
+            "name": "ensemble_fluxlat_FR-Gri_day0.png",
+            "src": "assets/sites/FR-Gri/ensemble_LHF_GPP/ensemble_fluxlat_FR-Gri_day0.png",
+            "category": "ensemble_LHF_GPP"
+          },
+          {
+            "name": "ensemble_fluxlat_FR-Gri_day300.png",
+            "src": "assets/sites/FR-Gri/ensemble_LHF_GPP/ensemble_fluxlat_FR-Gri_day300.png",
+            "category": "ensemble_LHF_GPP"
+          },
+          {
+            "name": "ensemble_fluxsens_FR-Gri_day0.png",
+            "src": "assets/sites/FR-Gri/ensemble_LHF_GPP/ensemble_fluxsens_FR-Gri_day0.png",
+            "category": "ensemble_LHF_GPP"
+          },
+          {
+            "name": "ensemble_fluxsens_FR-Gri_day300.png",
+            "src": "assets/sites/FR-Gri/ensemble_LHF_GPP/ensemble_fluxsens_FR-Gri_day300.png",
+            "category": "ensemble_LHF_GPP"
+          },
+          {
+            "name": "ensemble_gppt_FR-Gri_day0.png",
+            "src": "assets/sites/FR-Gri/ensemble_LHF_GPP/ensemble_gppt_FR-Gri_day0.png",
+            "category": "ensemble_LHF_GPP"
+          },
+          {
+            "name": "ensemble_gppt_FR-Gri_day300.png",
+            "src": "assets/sites/FR-Gri/ensemble_LHF_GPP/ensemble_gppt_FR-Gri_day300.png",
+            "category": "ensemble_LHF_GPP"
+          },
+          {
+            "name": "ensemble_neet_FR-Gri_day0.png",
+            "src": "assets/sites/FR-Gri/ensemble_LHF_GPP/ensemble_neet_FR-Gri_day0.png",
+            "category": "ensemble_LHF_GPP"
+          },
+          {
+            "name": "ensemble_neet_FR-Gri_day300.png",
+            "src": "assets/sites/FR-Gri/ensemble_LHF_GPP/ensemble_neet_FR-Gri_day300.png",
+            "category": "ensemble_LHF_GPP"
+          }
+        ],
+        "ensemble_LAIAGB": [
+          {
+            "name": "ensemble_agb_FR-Gri_day0.png",
+            "src": "assets/sites/FR-Gri/ensemble_LAIAGB/ensemble_agb_FR-Gri_day0.png",
+            "category": "ensemble_LAIAGB"
+          },
+          {
+            "name": "ensemble_agb_FR-Gri_day300.png",
+            "src": "assets/sites/FR-Gri/ensemble_LAIAGB/ensemble_agb_FR-Gri_day300.png",
+            "category": "ensemble_LAIAGB"
+          },
+          {
+            "name": "ensemble_lai_stics_FR-Gri_day0.png",
+            "src": "assets/sites/FR-Gri/ensemble_LAIAGB/ensemble_lai_stics_FR-Gri_day0.png",
+            "category": "ensemble_LAIAGB"
+          },
+          {
+            "name": "ensemble_lai_stics_FR-Gri_day300.png",
+            "src": "assets/sites/FR-Gri/ensemble_LAIAGB/ensemble_lai_stics_FR-Gri_day300.png",
+            "category": "ensemble_LAIAGB"
+          }
+        ],
+        "PRIOR_orig": [
+          {
+            "name": "fluxlat_FR-Gri_PRIOR_orig_from_nc.png",
+            "src": "assets/sites/FR-Gri/PRIOR_orig/fluxlat_FR-Gri_PRIOR_orig_from_nc.png",
+            "category": "PRIOR_orig"
+          },
+          {
+            "name": "fluxsens_FR-Gri_PRIOR_orig_from_nc.png",
+            "src": "assets/sites/FR-Gri/PRIOR_orig/fluxsens_FR-Gri_PRIOR_orig_from_nc.png",
+            "category": "PRIOR_orig"
+          },
+          {
+            "name": "gppt_FR-Gri_PRIOR_orig_from_nc.png",
+            "src": "assets/sites/FR-Gri/PRIOR_orig/gppt_FR-Gri_PRIOR_orig_from_nc.png",
+            "category": "PRIOR_orig"
+          },
+          {
+            "name": "neet_FR-Gri_PRIOR_orig_from_nc.png",
+            "src": "assets/sites/FR-Gri/PRIOR_orig/neet_FR-Gri_PRIOR_orig_from_nc.png",
+            "category": "PRIOR_orig"
+          }
+        ],
+        "PRIOR_optY": [
+          {
+            "name": "fluxlat_FR-Gri_PRIOR_optY_from_nc.png",
+            "src": "assets/sites/FR-Gri/PRIOR_optY/fluxlat_FR-Gri_PRIOR_optY_from_nc.png",
+            "category": "PRIOR_optY"
+          },
+          {
+            "name": "fluxsens_FR-Gri_PRIOR_optY_from_nc.png",
+            "src": "assets/sites/FR-Gri/PRIOR_optY/fluxsens_FR-Gri_PRIOR_optY_from_nc.png",
+            "category": "PRIOR_optY"
+          },
+          {
+            "name": "gppt_FR-Gri_PRIOR_optY_from_nc.png",
+            "src": "assets/sites/FR-Gri/PRIOR_optY/gppt_FR-Gri_PRIOR_optY_from_nc.png",
+            "category": "PRIOR_optY"
+          },
+          {
+            "name": "neet_FR-Gri_PRIOR_optY_from_nc.png",
+            "src": "assets/sites/FR-Gri/PRIOR_optY/neet_FR-Gri_PRIOR_optY_from_nc.png",
+            "category": "PRIOR_optY"
+          }
+        ],
+        "PRIOR_optN": [
+          {
+            "name": "fluxlat_FR-Gri_PRIOR_optN_from_nc.png",
+            "src": "assets/sites/FR-Gri/PRIOR_optN/fluxlat_FR-Gri_PRIOR_optN_from_nc.png",
+            "category": "PRIOR_optN"
+          },
+          {
+            "name": "fluxsens_FR-Gri_PRIOR_optN_from_nc.png",
+            "src": "assets/sites/FR-Gri/PRIOR_optN/fluxsens_FR-Gri_PRIOR_optN_from_nc.png",
+            "category": "PRIOR_optN"
+          },
+          {
+            "name": "gppt_FR-Gri_PRIOR_optN_from_nc.png",
+            "src": "assets/sites/FR-Gri/PRIOR_optN/gppt_FR-Gri_PRIOR_optN_from_nc.png",
+            "category": "PRIOR_optN"
+          },
+          {
+            "name": "neet_FR-Gri_PRIOR_optN_from_nc.png",
+            "src": "assets/sites/FR-Gri/PRIOR_optN/neet_FR-Gri_PRIOR_optN_from_nc.png",
+            "category": "PRIOR_optN"
+          }
+        ],
+        "PRIOR_orig_LAIAGB": [
+          {
+            "name": "agb_FR-Gri_PRIOR_orig_LAIAGB_from_nc.png",
+            "src": "assets/sites/FR-Gri/PRIOR_orig_LAIAGB/agb_FR-Gri_PRIOR_orig_LAIAGB_from_nc.png",
+            "category": "PRIOR_orig_LAIAGB"
+          },
+          {
+            "name": "lai_stics_FR-Gri_PRIOR_orig_LAIAGB_from_nc.png",
+            "src": "assets/sites/FR-Gri/PRIOR_orig_LAIAGB/lai_stics_FR-Gri_PRIOR_orig_LAIAGB_from_nc.png",
+            "category": "PRIOR_orig_LAIAGB"
+          }
+        ],
+        "PRIOR_optY_LAIAGB": [
+          {
+            "name": "agb_FR-Gri_PRIOR_optY_LAIAGB_from_nc.png",
+            "src": "assets/sites/FR-Gri/PRIOR_optY_LAIAGB/agb_FR-Gri_PRIOR_optY_LAIAGB_from_nc.png",
+            "category": "PRIOR_optY_LAIAGB"
+          },
+          {
+            "name": "lai_stics_FR-Gri_PRIOR_optY_LAIAGB_from_nc.png",
+            "src": "assets/sites/FR-Gri/PRIOR_optY_LAIAGB/lai_stics_FR-Gri_PRIOR_optY_LAIAGB_from_nc.png",
+            "category": "PRIOR_optY_LAIAGB"
+          }
+        ],
+        "PRIOR_optN_LAIAGB": [
+          {
+            "name": "agb_FR-Gri_PRIOR_optN_LAIAGB_from_nc.png",
+            "src": "assets/sites/FR-Gri/PRIOR_optN_LAIAGB/agb_FR-Gri_PRIOR_optN_LAIAGB_from_nc.png",
+            "category": "PRIOR_optN_LAIAGB"
+          },
+          {
+            "name": "lai_stics_FR-Gri_PRIOR_optN_LAIAGB_from_nc.png",
+            "src": "assets/sites/FR-Gri/PRIOR_optN_LAIAGB/lai_stics_FR-Gri_PRIOR_optN_LAIAGB_from_nc.png",
+            "category": "PRIOR_optN_LAIAGB"
+          }
+        ]
+      }
+    },
+    "FR-Lam": {
+      "name": "FR-Lam",
+      "type": "site",
+      "folder": "prior_FR-Lam",
+      "lat": 43.496,
+      "lon": 1.237,
+      "plots": {
+        "ensemble_LHF_GPP": [
+          {
+            "name": "ensemble_fluxlat_FR-Lam_day0.png",
+            "src": "assets/sites/FR-Lam/ensemble_LHF_GPP/ensemble_fluxlat_FR-Lam_day0.png",
+            "category": "ensemble_LHF_GPP"
+          },
+          {
+            "name": "ensemble_fluxlat_FR-Lam_day300.png",
+            "src": "assets/sites/FR-Lam/ensemble_LHF_GPP/ensemble_fluxlat_FR-Lam_day300.png",
+            "category": "ensemble_LHF_GPP"
+          },
+          {
+            "name": "ensemble_fluxsens_FR-Lam_day0.png",
+            "src": "assets/sites/FR-Lam/ensemble_LHF_GPP/ensemble_fluxsens_FR-Lam_day0.png",
+            "category": "ensemble_LHF_GPP"
+          },
+          {
+            "name": "ensemble_fluxsens_FR-Lam_day300.png",
+            "src": "assets/sites/FR-Lam/ensemble_LHF_GPP/ensemble_fluxsens_FR-Lam_day300.png",
+            "category": "ensemble_LHF_GPP"
+          },
+          {
+            "name": "ensemble_gppt_FR-Lam_day0.png",
+            "src": "assets/sites/FR-Lam/ensemble_LHF_GPP/ensemble_gppt_FR-Lam_day0.png",
+            "category": "ensemble_LHF_GPP"
+          },
+          {
+            "name": "ensemble_gppt_FR-Lam_day300.png",
+            "src": "assets/sites/FR-Lam/ensemble_LHF_GPP/ensemble_gppt_FR-Lam_day300.png",
+            "category": "ensemble_LHF_GPP"
+          },
+          {
+            "name": "ensemble_neet_FR-Lam_day0.png",
+            "src": "assets/sites/FR-Lam/ensemble_LHF_GPP/ensemble_neet_FR-Lam_day0.png",
+            "category": "ensemble_LHF_GPP"
+          },
+          {
+            "name": "ensemble_neet_FR-Lam_day300.png",
+            "src": "assets/sites/FR-Lam/ensemble_LHF_GPP/ensemble_neet_FR-Lam_day300.png",
+            "category": "ensemble_LHF_GPP"
+          }
+        ],
+        "ensemble_LAIAGB": [
+          {
+            "name": "ensemble_agb_FR-Lam_day0.png",
+            "src": "assets/sites/FR-Lam/ensemble_LAIAGB/ensemble_agb_FR-Lam_day0.png",
+            "category": "ensemble_LAIAGB"
+          },
+          {
+            "name": "ensemble_agb_FR-Lam_day300.png",
+            "src": "assets/sites/FR-Lam/ensemble_LAIAGB/ensemble_agb_FR-Lam_day300.png",
+            "category": "ensemble_LAIAGB"
+          },
+          {
+            "name": "ensemble_lai_stics_FR-Lam_day0.png",
+            "src": "assets/sites/FR-Lam/ensemble_LAIAGB/ensemble_lai_stics_FR-Lam_day0.png",
+            "category": "ensemble_LAIAGB"
+          },
+          {
+            "name": "ensemble_lai_stics_FR-Lam_day300.png",
+            "src": "assets/sites/FR-Lam/ensemble_LAIAGB/ensemble_lai_stics_FR-Lam_day300.png",
+            "category": "ensemble_LAIAGB"
+          }
+        ],
+        "PRIOR_orig": [
+          {
+            "name": "fluxlat_FR-Lam_PRIOR_orig_from_nc.png",
+            "src": "assets/sites/FR-Lam/PRIOR_orig/fluxlat_FR-Lam_PRIOR_orig_from_nc.png",
+            "category": "PRIOR_orig"
+          },
+          {
+            "name": "fluxsens_FR-Lam_PRIOR_orig_from_nc.png",
+            "src": "assets/sites/FR-Lam/PRIOR_orig/fluxsens_FR-Lam_PRIOR_orig_from_nc.png",
+            "category": "PRIOR_orig"
+          },
+          {
+            "name": "gppt_FR-Lam_PRIOR_orig_from_nc.png",
+            "src": "assets/sites/FR-Lam/PRIOR_orig/gppt_FR-Lam_PRIOR_orig_from_nc.png",
+            "category": "PRIOR_orig"
+          },
+          {
+            "name": "neet_FR-Lam_PRIOR_orig_from_nc.png",
+            "src": "assets/sites/FR-Lam/PRIOR_orig/neet_FR-Lam_PRIOR_orig_from_nc.png",
+            "category": "PRIOR_orig"
+          }
+        ],
+        "PRIOR_optY": [
+          {
+            "name": "fluxlat_FR-Lam_PRIOR_optY_from_nc.png",
+            "src": "assets/sites/FR-Lam/PRIOR_optY/fluxlat_FR-Lam_PRIOR_optY_from_nc.png",
+            "category": "PRIOR_optY"
+          },
+          {
+            "name": "fluxsens_FR-Lam_PRIOR_optY_from_nc.png",
+            "src": "assets/sites/FR-Lam/PRIOR_optY/fluxsens_FR-Lam_PRIOR_optY_from_nc.png",
+            "category": "PRIOR_optY"
+          },
+          {
+            "name": "gppt_FR-Lam_PRIOR_optY_from_nc.png",
+            "src": "assets/sites/FR-Lam/PRIOR_optY/gppt_FR-Lam_PRIOR_optY_from_nc.png",
+            "category": "PRIOR_optY"
+          },
+          {
+            "name": "neet_FR-Lam_PRIOR_optY_from_nc.png",
+            "src": "assets/sites/FR-Lam/PRIOR_optY/neet_FR-Lam_PRIOR_optY_from_nc.png",
+            "category": "PRIOR_optY"
+          }
+        ],
+        "PRIOR_optN": [
+          {
+            "name": "fluxlat_FR-Lam_PRIOR_optN_from_nc.png",
+            "src": "assets/sites/FR-Lam/PRIOR_optN/fluxlat_FR-Lam_PRIOR_optN_from_nc.png",
+            "category": "PRIOR_optN"
+          },
+          {
+            "name": "fluxsens_FR-Lam_PRIOR_optN_from_nc.png",
+            "src": "assets/sites/FR-Lam/PRIOR_optN/fluxsens_FR-Lam_PRIOR_optN_from_nc.png",
+            "category": "PRIOR_optN"
+          },
+          {
+            "name": "gppt_FR-Lam_PRIOR_optN_from_nc.png",
+            "src": "assets/sites/FR-Lam/PRIOR_optN/gppt_FR-Lam_PRIOR_optN_from_nc.png",
+            "category": "PRIOR_optN"
+          },
+          {
+            "name": "neet_FR-Lam_PRIOR_optN_from_nc.png",
+            "src": "assets/sites/FR-Lam/PRIOR_optN/neet_FR-Lam_PRIOR_optN_from_nc.png",
+            "category": "PRIOR_optN"
+          }
+        ],
+        "PRIOR_orig_LAIAGB": [
+          {
+            "name": "agb_FR-Lam_PRIOR_orig_LAIAGB_from_nc.png",
+            "src": "assets/sites/FR-Lam/PRIOR_orig_LAIAGB/agb_FR-Lam_PRIOR_orig_LAIAGB_from_nc.png",
+            "category": "PRIOR_orig_LAIAGB"
+          },
+          {
+            "name": "lai_stics_FR-Lam_PRIOR_orig_LAIAGB_from_nc.png",
+            "src": "assets/sites/FR-Lam/PRIOR_orig_LAIAGB/lai_stics_FR-Lam_PRIOR_orig_LAIAGB_from_nc.png",
+            "category": "PRIOR_orig_LAIAGB"
+          }
+        ],
+        "PRIOR_optY_LAIAGB": [
+          {
+            "name": "agb_FR-Lam_PRIOR_optY_LAIAGB_from_nc.png",
+            "src": "assets/sites/FR-Lam/PRIOR_optY_LAIAGB/agb_FR-Lam_PRIOR_optY_LAIAGB_from_nc.png",
+            "category": "PRIOR_optY_LAIAGB"
+          },
+          {
+            "name": "lai_stics_FR-Lam_PRIOR_optY_LAIAGB_from_nc.png",
+            "src": "assets/sites/FR-Lam/PRIOR_optY_LAIAGB/lai_stics_FR-Lam_PRIOR_optY_LAIAGB_from_nc.png",
+            "category": "PRIOR_optY_LAIAGB"
+          }
+        ],
+        "PRIOR_optN_LAIAGB": [
+          {
+            "name": "agb_FR-Lam_PRIOR_optN_LAIAGB_from_nc.png",
+            "src": "assets/sites/FR-Lam/PRIOR_optN_LAIAGB/agb_FR-Lam_PRIOR_optN_LAIAGB_from_nc.png",
+            "category": "PRIOR_optN_LAIAGB"
+          },
+          {
+            "name": "lai_stics_FR-Lam_PRIOR_optN_LAIAGB_from_nc.png",
+            "src": "assets/sites/FR-Lam/PRIOR_optN_LAIAGB/lai_stics_FR-Lam_PRIOR_optN_LAIAGB_from_nc.png",
+            "category": "PRIOR_optN_LAIAGB"
+          }
+        ]
+      }
     }
   },
-  "DE-Kli": {
-    "name": "DE-Kli",
-    "folder": "prior_DE-Kli",
-    "lat": 50.893,
-    "lon": 13.522,
-    "plots": {
-      "ensemble_LHF_GPP": [
-        {
-          "name": "ensemble_fluxlat_DE-Kli_day300.png",
-          "src": "assets/DE-Kli/ensemble_LHF_GPP/ensemble_fluxlat_DE-Kli_day300.png",
-          "category": "ensemble_LHF_GPP"
-        },
-        {
-          "name": "ensemble_fluxsens_DE-Kli_day300.png",
-          "src": "assets/DE-Kli/ensemble_LHF_GPP/ensemble_fluxsens_DE-Kli_day300.png",
-          "category": "ensemble_LHF_GPP"
-        },
-        {
-          "name": "ensemble_gppt_DE-Kli_day300.png",
-          "src": "assets/DE-Kli/ensemble_LHF_GPP/ensemble_gppt_DE-Kli_day300.png",
-          "category": "ensemble_LHF_GPP"
-        },
-        {
-          "name": "ensemble_neet_DE-Kli_day300.png",
-          "src": "assets/DE-Kli/ensemble_LHF_GPP/ensemble_neet_DE-Kli_day300.png",
-          "category": "ensemble_LHF_GPP"
-        }
-      ],
-      "ensemble_LAIAGB": [
-        {
-          "name": "ensemble_agb_DE-Kli_day300.png",
-          "src": "assets/DE-Kli/ensemble_LAIAGB/ensemble_agb_DE-Kli_day300.png",
-          "category": "ensemble_LAIAGB"
-        },
-        {
-          "name": "ensemble_lai_stics_DE-Kli_day300.png",
-          "src": "assets/DE-Kli/ensemble_LAIAGB/ensemble_lai_stics_DE-Kli_day300.png",
-          "category": "ensemble_LAIAGB"
-        }
-      ],
-      "PRIOR_orig": [
-        {
-          "name": "fluxlat_DE-Kli_PRIOR_orig_from_nc.png",
-          "src": "assets/DE-Kli/PRIOR_orig/fluxlat_DE-Kli_PRIOR_orig_from_nc.png",
-          "category": "PRIOR_orig"
-        },
-        {
-          "name": "fluxsens_DE-Kli_PRIOR_orig_from_nc.png",
-          "src": "assets/DE-Kli/PRIOR_orig/fluxsens_DE-Kli_PRIOR_orig_from_nc.png",
-          "category": "PRIOR_orig"
-        },
-        {
-          "name": "gppt_DE-Kli_PRIOR_orig_from_nc.png",
-          "src": "assets/DE-Kli/PRIOR_orig/gppt_DE-Kli_PRIOR_orig_from_nc.png",
-          "category": "PRIOR_orig"
-        },
-        {
-          "name": "neet_DE-Kli_PRIOR_orig_from_nc.png",
-          "src": "assets/DE-Kli/PRIOR_orig/neet_DE-Kli_PRIOR_orig_from_nc.png",
-          "category": "PRIOR_orig"
-        }
-      ],
-      "PRIOR_optY": [
-        {
-          "name": "fluxlat_DE-Kli_PRIOR_optY_from_nc.png",
-          "src": "assets/DE-Kli/PRIOR_optY/fluxlat_DE-Kli_PRIOR_optY_from_nc.png",
-          "category": "PRIOR_optY"
-        },
-        {
-          "name": "fluxsens_DE-Kli_PRIOR_optY_from_nc.png",
-          "src": "assets/DE-Kli/PRIOR_optY/fluxsens_DE-Kli_PRIOR_optY_from_nc.png",
-          "category": "PRIOR_optY"
-        },
-        {
-          "name": "gppt_DE-Kli_PRIOR_optY_from_nc.png",
-          "src": "assets/DE-Kli/PRIOR_optY/gppt_DE-Kli_PRIOR_optY_from_nc.png",
-          "category": "PRIOR_optY"
-        },
-        {
-          "name": "neet_DE-Kli_PRIOR_optY_from_nc.png",
-          "src": "assets/DE-Kli/PRIOR_optY/neet_DE-Kli_PRIOR_optY_from_nc.png",
-          "category": "PRIOR_optY"
-        }
-      ],
-      "PRIOR_optN": [
-        {
-          "name": "fluxlat_DE-Kli_PRIOR_optN_from_nc.png",
-          "src": "assets/DE-Kli/PRIOR_optN/fluxlat_DE-Kli_PRIOR_optN_from_nc.png",
-          "category": "PRIOR_optN"
-        },
-        {
-          "name": "fluxsens_DE-Kli_PRIOR_optN_from_nc.png",
-          "src": "assets/DE-Kli/PRIOR_optN/fluxsens_DE-Kli_PRIOR_optN_from_nc.png",
-          "category": "PRIOR_optN"
-        },
-        {
-          "name": "gppt_DE-Kli_PRIOR_optN_from_nc.png",
-          "src": "assets/DE-Kli/PRIOR_optN/gppt_DE-Kli_PRIOR_optN_from_nc.png",
-          "category": "PRIOR_optN"
-        },
-        {
-          "name": "neet_DE-Kli_PRIOR_optN_from_nc.png",
-          "src": "assets/DE-Kli/PRIOR_optN/neet_DE-Kli_PRIOR_optN_from_nc.png",
-          "category": "PRIOR_optN"
-        }
-      ],
-      "PRIOR_orig_LAIAGB": [
-        {
-          "name": "agb_DE-Kli_PRIOR_orig_LAIAGB_from_nc.png",
-          "src": "assets/DE-Kli/PRIOR_orig_LAIAGB/agb_DE-Kli_PRIOR_orig_LAIAGB_from_nc.png",
-          "category": "PRIOR_orig_LAIAGB"
-        },
-        {
-          "name": "lai_stics_DE-Kli_PRIOR_orig_LAIAGB_from_nc.png",
-          "src": "assets/DE-Kli/PRIOR_orig_LAIAGB/lai_stics_DE-Kli_PRIOR_orig_LAIAGB_from_nc.png",
-          "category": "PRIOR_orig_LAIAGB"
-        }
-      ],
-      "PRIOR_optY_LAIAGB": [
-        {
-          "name": "agb_DE-Kli_PRIOR_optY_LAIAGB_from_nc.png",
-          "src": "assets/DE-Kli/PRIOR_optY_LAIAGB/agb_DE-Kli_PRIOR_optY_LAIAGB_from_nc.png",
-          "category": "PRIOR_optY_LAIAGB"
-        },
-        {
-          "name": "lai_stics_DE-Kli_PRIOR_optY_LAIAGB_from_nc.png",
-          "src": "assets/DE-Kli/PRIOR_optY_LAIAGB/lai_stics_DE-Kli_PRIOR_optY_LAIAGB_from_nc.png",
-          "category": "PRIOR_optY_LAIAGB"
-        }
-      ],
-      "PRIOR_optN_LAIAGB": [
-        {
-          "name": "agb_DE-Kli_PRIOR_optN_LAIAGB_from_nc.png",
-          "src": "assets/DE-Kli/PRIOR_optN_LAIAGB/agb_DE-Kli_PRIOR_optN_LAIAGB_from_nc.png",
-          "category": "PRIOR_optN_LAIAGB"
-        },
-        {
-          "name": "lai_stics_DE-Kli_PRIOR_optN_LAIAGB_from_nc.png",
-          "src": "assets/DE-Kli/PRIOR_optN_LAIAGB/lai_stics_DE-Kli_PRIOR_optN_LAIAGB_from_nc.png",
-          "category": "PRIOR_optN_LAIAGB"
-        }
-      ]
-    }
-  },
-  "FR-Aur": {
-    "name": "FR-Aur",
-    "folder": "prior_FR-Aur",
-    "lat": 43.549,
-    "lon": 1.106,
-    "plots": {
-      "ensemble_LHF_GPP": [
-        {
-          "name": "ensemble_fluxlat_FR-Aur_day300.png",
-          "src": "assets/FR-Aur/ensemble_LHF_GPP/ensemble_fluxlat_FR-Aur_day300.png",
-          "category": "ensemble_LHF_GPP"
-        },
-        {
-          "name": "ensemble_fluxsens_FR-Aur_day300.png",
-          "src": "assets/FR-Aur/ensemble_LHF_GPP/ensemble_fluxsens_FR-Aur_day300.png",
-          "category": "ensemble_LHF_GPP"
-        },
-        {
-          "name": "ensemble_gppt_FR-Aur_day300.png",
-          "src": "assets/FR-Aur/ensemble_LHF_GPP/ensemble_gppt_FR-Aur_day300.png",
-          "category": "ensemble_LHF_GPP"
-        },
-        {
-          "name": "ensemble_neet_FR-Aur_day300.png",
-          "src": "assets/FR-Aur/ensemble_LHF_GPP/ensemble_neet_FR-Aur_day300.png",
-          "category": "ensemble_LHF_GPP"
-        }
-      ],
-      "ensemble_LAIAGB": [
-        {
-          "name": "ensemble_agb_FR-Aur_day300.png",
-          "src": "assets/FR-Aur/ensemble_LAIAGB/ensemble_agb_FR-Aur_day300.png",
-          "category": "ensemble_LAIAGB"
-        },
-        {
-          "name": "ensemble_lai_stics_FR-Aur_day300.png",
-          "src": "assets/FR-Aur/ensemble_LAIAGB/ensemble_lai_stics_FR-Aur_day300.png",
-          "category": "ensemble_LAIAGB"
-        }
-      ],
-      "PRIOR_orig": [
-        {
-          "name": "fluxlat_FR-Aur_PRIOR_orig_from_nc.png",
-          "src": "assets/FR-Aur/PRIOR_orig/fluxlat_FR-Aur_PRIOR_orig_from_nc.png",
-          "category": "PRIOR_orig"
-        },
-        {
-          "name": "fluxsens_FR-Aur_PRIOR_orig_from_nc.png",
-          "src": "assets/FR-Aur/PRIOR_orig/fluxsens_FR-Aur_PRIOR_orig_from_nc.png",
-          "category": "PRIOR_orig"
-        },
-        {
-          "name": "gppt_FR-Aur_PRIOR_orig_from_nc.png",
-          "src": "assets/FR-Aur/PRIOR_orig/gppt_FR-Aur_PRIOR_orig_from_nc.png",
-          "category": "PRIOR_orig"
-        },
-        {
-          "name": "neet_FR-Aur_PRIOR_orig_from_nc.png",
-          "src": "assets/FR-Aur/PRIOR_orig/neet_FR-Aur_PRIOR_orig_from_nc.png",
-          "category": "PRIOR_orig"
-        }
-      ],
-      "PRIOR_optY": [
-        {
-          "name": "fluxlat_FR-Aur_PRIOR_optY_from_nc.png",
-          "src": "assets/FR-Aur/PRIOR_optY/fluxlat_FR-Aur_PRIOR_optY_from_nc.png",
-          "category": "PRIOR_optY"
-        },
-        {
-          "name": "fluxsens_FR-Aur_PRIOR_optY_from_nc.png",
-          "src": "assets/FR-Aur/PRIOR_optY/fluxsens_FR-Aur_PRIOR_optY_from_nc.png",
-          "category": "PRIOR_optY"
-        },
-        {
-          "name": "gppt_FR-Aur_PRIOR_optY_from_nc.png",
-          "src": "assets/FR-Aur/PRIOR_optY/gppt_FR-Aur_PRIOR_optY_from_nc.png",
-          "category": "PRIOR_optY"
-        },
-        {
-          "name": "neet_FR-Aur_PRIOR_optY_from_nc.png",
-          "src": "assets/FR-Aur/PRIOR_optY/neet_FR-Aur_PRIOR_optY_from_nc.png",
-          "category": "PRIOR_optY"
-        }
-      ],
-      "PRIOR_optN": [
-        {
-          "name": "fluxlat_FR-Aur_PRIOR_optN_from_nc.png",
-          "src": "assets/FR-Aur/PRIOR_optN/fluxlat_FR-Aur_PRIOR_optN_from_nc.png",
-          "category": "PRIOR_optN"
-        },
-        {
-          "name": "fluxsens_FR-Aur_PRIOR_optN_from_nc.png",
-          "src": "assets/FR-Aur/PRIOR_optN/fluxsens_FR-Aur_PRIOR_optN_from_nc.png",
-          "category": "PRIOR_optN"
-        },
-        {
-          "name": "gppt_FR-Aur_PRIOR_optN_from_nc.png",
-          "src": "assets/FR-Aur/PRIOR_optN/gppt_FR-Aur_PRIOR_optN_from_nc.png",
-          "category": "PRIOR_optN"
-        },
-        {
-          "name": "neet_FR-Aur_PRIOR_optN_from_nc.png",
-          "src": "assets/FR-Aur/PRIOR_optN/neet_FR-Aur_PRIOR_optN_from_nc.png",
-          "category": "PRIOR_optN"
-        }
-      ],
-      "PRIOR_orig_LAIAGB": [
-        {
-          "name": "agb_FR-Aur_PRIOR_orig_LAIAGB_from_nc.png",
-          "src": "assets/FR-Aur/PRIOR_orig_LAIAGB/agb_FR-Aur_PRIOR_orig_LAIAGB_from_nc.png",
-          "category": "PRIOR_orig_LAIAGB"
-        },
-        {
-          "name": "lai_stics_FR-Aur_PRIOR_orig_LAIAGB_from_nc.png",
-          "src": "assets/FR-Aur/PRIOR_orig_LAIAGB/lai_stics_FR-Aur_PRIOR_orig_LAIAGB_from_nc.png",
-          "category": "PRIOR_orig_LAIAGB"
-        }
-      ],
-      "PRIOR_optY_LAIAGB": [
-        {
-          "name": "agb_FR-Aur_PRIOR_optY_LAIAGB_from_nc.png",
-          "src": "assets/FR-Aur/PRIOR_optY_LAIAGB/agb_FR-Aur_PRIOR_optY_LAIAGB_from_nc.png",
-          "category": "PRIOR_optY_LAIAGB"
-        },
-        {
-          "name": "lai_stics_FR-Aur_PRIOR_optY_LAIAGB_from_nc.png",
-          "src": "assets/FR-Aur/PRIOR_optY_LAIAGB/lai_stics_FR-Aur_PRIOR_optY_LAIAGB_from_nc.png",
-          "category": "PRIOR_optY_LAIAGB"
-        }
-      ],
-      "PRIOR_optN_LAIAGB": [
-        {
-          "name": "agb_FR-Aur_PRIOR_optN_LAIAGB_from_nc.png",
-          "src": "assets/FR-Aur/PRIOR_optN_LAIAGB/agb_FR-Aur_PRIOR_optN_LAIAGB_from_nc.png",
-          "category": "PRIOR_optN_LAIAGB"
-        },
-        {
-          "name": "lai_stics_FR-Aur_PRIOR_optN_LAIAGB_from_nc.png",
-          "src": "assets/FR-Aur/PRIOR_optN_LAIAGB/lai_stics_FR-Aur_PRIOR_optN_LAIAGB_from_nc.png",
-          "category": "PRIOR_optN_LAIAGB"
-        }
-      ]
-    }
-  },
-  "FR-Gri": {
-    "name": "FR-Gri",
-    "folder": "prior_FR-Gri",
-    "lat": 48.844,
-    "lon": 1.951,
-    "plots": {
-      "ensemble_LHF_GPP": [
-        {
-          "name": "ensemble_fluxlat_FR-Gri_day300.png",
-          "src": "assets/FR-Gri/ensemble_LHF_GPP/ensemble_fluxlat_FR-Gri_day300.png",
-          "category": "ensemble_LHF_GPP"
-        },
-        {
-          "name": "ensemble_fluxsens_FR-Gri_day300.png",
-          "src": "assets/FR-Gri/ensemble_LHF_GPP/ensemble_fluxsens_FR-Gri_day300.png",
-          "category": "ensemble_LHF_GPP"
-        },
-        {
-          "name": "ensemble_gppt_FR-Gri_day300.png",
-          "src": "assets/FR-Gri/ensemble_LHF_GPP/ensemble_gppt_FR-Gri_day300.png",
-          "category": "ensemble_LHF_GPP"
-        },
-        {
-          "name": "ensemble_neet_FR-Gri_day300.png",
-          "src": "assets/FR-Gri/ensemble_LHF_GPP/ensemble_neet_FR-Gri_day300.png",
-          "category": "ensemble_LHF_GPP"
-        }
-      ],
-      "ensemble_LAIAGB": [
-        {
-          "name": "ensemble_agb_FR-Gri_day300.png",
-          "src": "assets/FR-Gri/ensemble_LAIAGB/ensemble_agb_FR-Gri_day300.png",
-          "category": "ensemble_LAIAGB"
-        },
-        {
-          "name": "ensemble_lai_stics_FR-Gri_day300.png",
-          "src": "assets/FR-Gri/ensemble_LAIAGB/ensemble_lai_stics_FR-Gri_day300.png",
-          "category": "ensemble_LAIAGB"
-        }
-      ],
-      "PRIOR_orig": [
-        {
-          "name": "fluxlat_FR-Gri_PRIOR_orig_from_nc.png",
-          "src": "assets/FR-Gri/PRIOR_orig/fluxlat_FR-Gri_PRIOR_orig_from_nc.png",
-          "category": "PRIOR_orig"
-        },
-        {
-          "name": "fluxsens_FR-Gri_PRIOR_orig_from_nc.png",
-          "src": "assets/FR-Gri/PRIOR_orig/fluxsens_FR-Gri_PRIOR_orig_from_nc.png",
-          "category": "PRIOR_orig"
-        },
-        {
-          "name": "gppt_FR-Gri_PRIOR_orig_from_nc.png",
-          "src": "assets/FR-Gri/PRIOR_orig/gppt_FR-Gri_PRIOR_orig_from_nc.png",
-          "category": "PRIOR_orig"
-        },
-        {
-          "name": "neet_FR-Gri_PRIOR_orig_from_nc.png",
-          "src": "assets/FR-Gri/PRIOR_orig/neet_FR-Gri_PRIOR_orig_from_nc.png",
-          "category": "PRIOR_orig"
-        }
-      ],
-      "PRIOR_optY": [
-        {
-          "name": "fluxlat_FR-Gri_PRIOR_optY_from_nc.png",
-          "src": "assets/FR-Gri/PRIOR_optY/fluxlat_FR-Gri_PRIOR_optY_from_nc.png",
-          "category": "PRIOR_optY"
-        },
-        {
-          "name": "fluxsens_FR-Gri_PRIOR_optY_from_nc.png",
-          "src": "assets/FR-Gri/PRIOR_optY/fluxsens_FR-Gri_PRIOR_optY_from_nc.png",
-          "category": "PRIOR_optY"
-        },
-        {
-          "name": "gppt_FR-Gri_PRIOR_optY_from_nc.png",
-          "src": "assets/FR-Gri/PRIOR_optY/gppt_FR-Gri_PRIOR_optY_from_nc.png",
-          "category": "PRIOR_optY"
-        },
-        {
-          "name": "neet_FR-Gri_PRIOR_optY_from_nc.png",
-          "src": "assets/FR-Gri/PRIOR_optY/neet_FR-Gri_PRIOR_optY_from_nc.png",
-          "category": "PRIOR_optY"
-        }
-      ],
-      "PRIOR_optN": [
-        {
-          "name": "fluxlat_FR-Gri_PRIOR_optN_from_nc.png",
-          "src": "assets/FR-Gri/PRIOR_optN/fluxlat_FR-Gri_PRIOR_optN_from_nc.png",
-          "category": "PRIOR_optN"
-        },
-        {
-          "name": "fluxsens_FR-Gri_PRIOR_optN_from_nc.png",
-          "src": "assets/FR-Gri/PRIOR_optN/fluxsens_FR-Gri_PRIOR_optN_from_nc.png",
-          "category": "PRIOR_optN"
-        },
-        {
-          "name": "gppt_FR-Gri_PRIOR_optN_from_nc.png",
-          "src": "assets/FR-Gri/PRIOR_optN/gppt_FR-Gri_PRIOR_optN_from_nc.png",
-          "category": "PRIOR_optN"
-        },
-        {
-          "name": "neet_FR-Gri_PRIOR_optN_from_nc.png",
-          "src": "assets/FR-Gri/PRIOR_optN/neet_FR-Gri_PRIOR_optN_from_nc.png",
-          "category": "PRIOR_optN"
-        }
-      ],
-      "PRIOR_orig_LAIAGB": [
-        {
-          "name": "agb_FR-Gri_PRIOR_orig_LAIAGB_from_nc.png",
-          "src": "assets/FR-Gri/PRIOR_orig_LAIAGB/agb_FR-Gri_PRIOR_orig_LAIAGB_from_nc.png",
-          "category": "PRIOR_orig_LAIAGB"
-        },
-        {
-          "name": "lai_stics_FR-Gri_PRIOR_orig_LAIAGB_from_nc.png",
-          "src": "assets/FR-Gri/PRIOR_orig_LAIAGB/lai_stics_FR-Gri_PRIOR_orig_LAIAGB_from_nc.png",
-          "category": "PRIOR_orig_LAIAGB"
-        }
-      ],
-      "PRIOR_optY_LAIAGB": [
-        {
-          "name": "agb_FR-Gri_PRIOR_optY_LAIAGB_from_nc.png",
-          "src": "assets/FR-Gri/PRIOR_optY_LAIAGB/agb_FR-Gri_PRIOR_optY_LAIAGB_from_nc.png",
-          "category": "PRIOR_optY_LAIAGB"
-        },
-        {
-          "name": "lai_stics_FR-Gri_PRIOR_optY_LAIAGB_from_nc.png",
-          "src": "assets/FR-Gri/PRIOR_optY_LAIAGB/lai_stics_FR-Gri_PRIOR_optY_LAIAGB_from_nc.png",
-          "category": "PRIOR_optY_LAIAGB"
-        }
-      ],
-      "PRIOR_optN_LAIAGB": [
-        {
-          "name": "agb_FR-Gri_PRIOR_optN_LAIAGB_from_nc.png",
-          "src": "assets/FR-Gri/PRIOR_optN_LAIAGB/agb_FR-Gri_PRIOR_optN_LAIAGB_from_nc.png",
-          "category": "PRIOR_optN_LAIAGB"
-        },
-        {
-          "name": "lai_stics_FR-Gri_PRIOR_optN_LAIAGB_from_nc.png",
-          "src": "assets/FR-Gri/PRIOR_optN_LAIAGB/lai_stics_FR-Gri_PRIOR_optN_LAIAGB_from_nc.png",
-          "category": "PRIOR_optN_LAIAGB"
-        }
-      ]
-    }
-  },
-  "FR-Lam": {
-    "name": "FR-Lam",
-    "folder": "prior_FR-Lam",
-    "lat": 43.496,
-    "lon": 1.237,
-    "plots": {
-      "ensemble_LHF_GPP": [
-        {
-          "name": "ensemble_fluxlat_FR-Lam_day300.png",
-          "src": "assets/FR-Lam/ensemble_LHF_GPP/ensemble_fluxlat_FR-Lam_day300.png",
-          "category": "ensemble_LHF_GPP"
-        },
-        {
-          "name": "ensemble_fluxsens_FR-Lam_day300.png",
-          "src": "assets/FR-Lam/ensemble_LHF_GPP/ensemble_fluxsens_FR-Lam_day300.png",
-          "category": "ensemble_LHF_GPP"
-        },
-        {
-          "name": "ensemble_gppt_FR-Lam_day300.png",
-          "src": "assets/FR-Lam/ensemble_LHF_GPP/ensemble_gppt_FR-Lam_day300.png",
-          "category": "ensemble_LHF_GPP"
-        },
-        {
-          "name": "ensemble_neet_FR-Lam_day300.png",
-          "src": "assets/FR-Lam/ensemble_LHF_GPP/ensemble_neet_FR-Lam_day300.png",
-          "category": "ensemble_LHF_GPP"
-        }
-      ],
-      "ensemble_LAIAGB": [
-        {
-          "name": "ensemble_agb_FR-Lam_day300.png",
-          "src": "assets/FR-Lam/ensemble_LAIAGB/ensemble_agb_FR-Lam_day300.png",
-          "category": "ensemble_LAIAGB"
-        },
-        {
-          "name": "ensemble_lai_stics_FR-Lam_day300.png",
-          "src": "assets/FR-Lam/ensemble_LAIAGB/ensemble_lai_stics_FR-Lam_day300.png",
-          "category": "ensemble_LAIAGB"
-        }
-      ],
-      "PRIOR_orig": [
-        {
-          "name": "fluxlat_FR-Lam_PRIOR_orig_from_nc.png",
-          "src": "assets/FR-Lam/PRIOR_orig/fluxlat_FR-Lam_PRIOR_orig_from_nc.png",
-          "category": "PRIOR_orig"
-        },
-        {
-          "name": "fluxsens_FR-Lam_PRIOR_orig_from_nc.png",
-          "src": "assets/FR-Lam/PRIOR_orig/fluxsens_FR-Lam_PRIOR_orig_from_nc.png",
-          "category": "PRIOR_orig"
-        },
-        {
-          "name": "gppt_FR-Lam_PRIOR_orig_from_nc.png",
-          "src": "assets/FR-Lam/PRIOR_orig/gppt_FR-Lam_PRIOR_orig_from_nc.png",
-          "category": "PRIOR_orig"
-        },
-        {
-          "name": "neet_FR-Lam_PRIOR_orig_from_nc.png",
-          "src": "assets/FR-Lam/PRIOR_orig/neet_FR-Lam_PRIOR_orig_from_nc.png",
-          "category": "PRIOR_orig"
-        }
-      ],
-      "PRIOR_optY": [
-        {
-          "name": "fluxlat_FR-Lam_PRIOR_optY_from_nc.png",
-          "src": "assets/FR-Lam/PRIOR_optY/fluxlat_FR-Lam_PRIOR_optY_from_nc.png",
-          "category": "PRIOR_optY"
-        },
-        {
-          "name": "fluxsens_FR-Lam_PRIOR_optY_from_nc.png",
-          "src": "assets/FR-Lam/PRIOR_optY/fluxsens_FR-Lam_PRIOR_optY_from_nc.png",
-          "category": "PRIOR_optY"
-        },
-        {
-          "name": "gppt_FR-Lam_PRIOR_optY_from_nc.png",
-          "src": "assets/FR-Lam/PRIOR_optY/gppt_FR-Lam_PRIOR_optY_from_nc.png",
-          "category": "PRIOR_optY"
-        },
-        {
-          "name": "neet_FR-Lam_PRIOR_optY_from_nc.png",
-          "src": "assets/FR-Lam/PRIOR_optY/neet_FR-Lam_PRIOR_optY_from_nc.png",
-          "category": "PRIOR_optY"
-        }
-      ],
-      "PRIOR_optN": [
-        {
-          "name": "fluxlat_FR-Lam_PRIOR_optN_from_nc.png",
-          "src": "assets/FR-Lam/PRIOR_optN/fluxlat_FR-Lam_PRIOR_optN_from_nc.png",
-          "category": "PRIOR_optN"
-        },
-        {
-          "name": "fluxsens_FR-Lam_PRIOR_optN_from_nc.png",
-          "src": "assets/FR-Lam/PRIOR_optN/fluxsens_FR-Lam_PRIOR_optN_from_nc.png",
-          "category": "PRIOR_optN"
-        },
-        {
-          "name": "gppt_FR-Lam_PRIOR_optN_from_nc.png",
-          "src": "assets/FR-Lam/PRIOR_optN/gppt_FR-Lam_PRIOR_optN_from_nc.png",
-          "category": "PRIOR_optN"
-        },
-        {
-          "name": "neet_FR-Lam_PRIOR_optN_from_nc.png",
-          "src": "assets/FR-Lam/PRIOR_optN/neet_FR-Lam_PRIOR_optN_from_nc.png",
-          "category": "PRIOR_optN"
-        }
-      ],
-      "PRIOR_orig_LAIAGB": [
-        {
-          "name": "agb_FR-Lam_PRIOR_orig_LAIAGB_from_nc.png",
-          "src": "assets/FR-Lam/PRIOR_orig_LAIAGB/agb_FR-Lam_PRIOR_orig_LAIAGB_from_nc.png",
-          "category": "PRIOR_orig_LAIAGB"
-        },
-        {
-          "name": "lai_stics_FR-Lam_PRIOR_orig_LAIAGB_from_nc.png",
-          "src": "assets/FR-Lam/PRIOR_orig_LAIAGB/lai_stics_FR-Lam_PRIOR_orig_LAIAGB_from_nc.png",
-          "category": "PRIOR_orig_LAIAGB"
-        }
-      ],
-      "PRIOR_optY_LAIAGB": [
-        {
-          "name": "agb_FR-Lam_PRIOR_optY_LAIAGB_from_nc.png",
-          "src": "assets/FR-Lam/PRIOR_optY_LAIAGB/agb_FR-Lam_PRIOR_optY_LAIAGB_from_nc.png",
-          "category": "PRIOR_optY_LAIAGB"
-        },
-        {
-          "name": "lai_stics_FR-Lam_PRIOR_optY_LAIAGB_from_nc.png",
-          "src": "assets/FR-Lam/PRIOR_optY_LAIAGB/lai_stics_FR-Lam_PRIOR_optY_LAIAGB_from_nc.png",
-          "category": "PRIOR_optY_LAIAGB"
-        }
-      ],
-      "PRIOR_optN_LAIAGB": [
-        {
-          "name": "agb_FR-Lam_PRIOR_optN_LAIAGB_from_nc.png",
-          "src": "assets/FR-Lam/PRIOR_optN_LAIAGB/agb_FR-Lam_PRIOR_optN_LAIAGB_from_nc.png",
-          "category": "PRIOR_optN_LAIAGB"
-        },
-        {
-          "name": "lai_stics_FR-Lam_PRIOR_optN_LAIAGB_from_nc.png",
-          "src": "assets/FR-Lam/PRIOR_optN_LAIAGB/lai_stics_FR-Lam_PRIOR_optN_LAIAGB_from_nc.png",
-          "category": "PRIOR_optN_LAIAGB"
-        }
-      ]
+  "extra_opts": {
+    "TAllsite_WithSpinup_combined_V1": {
+      "name": "TAllsite_WithSpinup_combined_V1",
+      "type": "extra_opt",
+      "folder": "TAllsite_WithSpinup_combined_V1",
+      "plots": {
+        "BE-Lon_bio": [
+          {
+            "name": "agb_BE-Lon_bio_TAllsite_WithSpinup_combined_V1_prior_post_from_nc.png",
+            "src": "assets/extra_opts/TAllsite_WithSpinup_combined_V1/BE-Lon_bio/agb_BE-Lon_bio_TAllsite_WithSpinup_combined_V1_prior_post_from_nc.png",
+            "category": "BE-Lon_bio"
+          },
+          {
+            "name": "lai_stics_BE-Lon_bio_TAllsite_WithSpinup_combined_V1_prior_post_from_nc.png",
+            "src": "assets/extra_opts/TAllsite_WithSpinup_combined_V1/BE-Lon_bio/lai_stics_BE-Lon_bio_TAllsite_WithSpinup_combined_V1_prior_post_from_nc.png",
+            "category": "BE-Lon_bio"
+          }
+        ],
+        "BE-Lon_flux": [
+          {
+            "name": "fluxlat_BE-Lon_flux_TAllsite_WithSpinup_combined_V1_prior_post_from_nc.png",
+            "src": "assets/extra_opts/TAllsite_WithSpinup_combined_V1/BE-Lon_flux/fluxlat_BE-Lon_flux_TAllsite_WithSpinup_combined_V1_prior_post_from_nc.png",
+            "category": "BE-Lon_flux"
+          },
+          {
+            "name": "fluxsens_BE-Lon_flux_TAllsite_WithSpinup_combined_V1_prior_post_from_nc.png",
+            "src": "assets/extra_opts/TAllsite_WithSpinup_combined_V1/BE-Lon_flux/fluxsens_BE-Lon_flux_TAllsite_WithSpinup_combined_V1_prior_post_from_nc.png",
+            "category": "BE-Lon_flux"
+          },
+          {
+            "name": "gppt_BE-Lon_flux_TAllsite_WithSpinup_combined_V1_prior_post_from_nc.png",
+            "src": "assets/extra_opts/TAllsite_WithSpinup_combined_V1/BE-Lon_flux/gppt_BE-Lon_flux_TAllsite_WithSpinup_combined_V1_prior_post_from_nc.png",
+            "category": "BE-Lon_flux"
+          },
+          {
+            "name": "neet_BE-Lon_flux_TAllsite_WithSpinup_combined_V1_prior_post_from_nc.png",
+            "src": "assets/extra_opts/TAllsite_WithSpinup_combined_V1/BE-Lon_flux/neet_BE-Lon_flux_TAllsite_WithSpinup_combined_V1_prior_post_from_nc.png",
+            "category": "BE-Lon_flux"
+          }
+        ],
+        "DE-Kli_flux": [
+          {
+            "name": "fluxlat_DE-Kli_flux_TAllsite_WithSpinup_combined_V1_prior_post_from_nc.png",
+            "src": "assets/extra_opts/TAllsite_WithSpinup_combined_V1/DE-Kli_flux/fluxlat_DE-Kli_flux_TAllsite_WithSpinup_combined_V1_prior_post_from_nc.png",
+            "category": "DE-Kli_flux"
+          },
+          {
+            "name": "fluxsens_DE-Kli_flux_TAllsite_WithSpinup_combined_V1_prior_post_from_nc.png",
+            "src": "assets/extra_opts/TAllsite_WithSpinup_combined_V1/DE-Kli_flux/fluxsens_DE-Kli_flux_TAllsite_WithSpinup_combined_V1_prior_post_from_nc.png",
+            "category": "DE-Kli_flux"
+          },
+          {
+            "name": "gppt_DE-Kli_flux_TAllsite_WithSpinup_combined_V1_prior_post_from_nc.png",
+            "src": "assets/extra_opts/TAllsite_WithSpinup_combined_V1/DE-Kli_flux/gppt_DE-Kli_flux_TAllsite_WithSpinup_combined_V1_prior_post_from_nc.png",
+            "category": "DE-Kli_flux"
+          },
+          {
+            "name": "neet_DE-Kli_flux_TAllsite_WithSpinup_combined_V1_prior_post_from_nc.png",
+            "src": "assets/extra_opts/TAllsite_WithSpinup_combined_V1/DE-Kli_flux/neet_DE-Kli_flux_TAllsite_WithSpinup_combined_V1_prior_post_from_nc.png",
+            "category": "DE-Kli_flux"
+          }
+        ],
+        "DE_Kli_bio": [
+          {
+            "name": "agb_DE_Kli_bio_TAllsite_WithSpinup_combined_V1_prior_post_from_nc.png",
+            "src": "assets/extra_opts/TAllsite_WithSpinup_combined_V1/DE_Kli_bio/agb_DE_Kli_bio_TAllsite_WithSpinup_combined_V1_prior_post_from_nc.png",
+            "category": "DE_Kli_bio"
+          },
+          {
+            "name": "lai_stics_DE_Kli_bio_TAllsite_WithSpinup_combined_V1_prior_post_from_nc.png",
+            "src": "assets/extra_opts/TAllsite_WithSpinup_combined_V1/DE_Kli_bio/lai_stics_DE_Kli_bio_TAllsite_WithSpinup_combined_V1_prior_post_from_nc.png",
+            "category": "DE_Kli_bio"
+          }
+        ],
+        "FR-Aur_flux": [
+          {
+            "name": "fluxlat_FR-Aur_flux_TAllsite_WithSpinup_combined_V1_prior_post_from_nc.png",
+            "src": "assets/extra_opts/TAllsite_WithSpinup_combined_V1/FR-Aur_flux/fluxlat_FR-Aur_flux_TAllsite_WithSpinup_combined_V1_prior_post_from_nc.png",
+            "category": "FR-Aur_flux"
+          },
+          {
+            "name": "fluxsens_FR-Aur_flux_TAllsite_WithSpinup_combined_V1_prior_post_from_nc.png",
+            "src": "assets/extra_opts/TAllsite_WithSpinup_combined_V1/FR-Aur_flux/fluxsens_FR-Aur_flux_TAllsite_WithSpinup_combined_V1_prior_post_from_nc.png",
+            "category": "FR-Aur_flux"
+          },
+          {
+            "name": "gppt_FR-Aur_flux_TAllsite_WithSpinup_combined_V1_prior_post_from_nc.png",
+            "src": "assets/extra_opts/TAllsite_WithSpinup_combined_V1/FR-Aur_flux/gppt_FR-Aur_flux_TAllsite_WithSpinup_combined_V1_prior_post_from_nc.png",
+            "category": "FR-Aur_flux"
+          },
+          {
+            "name": "neet_FR-Aur_flux_TAllsite_WithSpinup_combined_V1_prior_post_from_nc.png",
+            "src": "assets/extra_opts/TAllsite_WithSpinup_combined_V1/FR-Aur_flux/neet_FR-Aur_flux_TAllsite_WithSpinup_combined_V1_prior_post_from_nc.png",
+            "category": "FR-Aur_flux"
+          }
+        ],
+        "FR-Gri_flux": [
+          {
+            "name": "fluxlat_FR-Gri_flux_TAllsite_WithSpinup_combined_V1_prior_post_from_nc.png",
+            "src": "assets/extra_opts/TAllsite_WithSpinup_combined_V1/FR-Gri_flux/fluxlat_FR-Gri_flux_TAllsite_WithSpinup_combined_V1_prior_post_from_nc.png",
+            "category": "FR-Gri_flux"
+          },
+          {
+            "name": "fluxsens_FR-Gri_flux_TAllsite_WithSpinup_combined_V1_prior_post_from_nc.png",
+            "src": "assets/extra_opts/TAllsite_WithSpinup_combined_V1/FR-Gri_flux/fluxsens_FR-Gri_flux_TAllsite_WithSpinup_combined_V1_prior_post_from_nc.png",
+            "category": "FR-Gri_flux"
+          },
+          {
+            "name": "gppt_FR-Gri_flux_TAllsite_WithSpinup_combined_V1_prior_post_from_nc.png",
+            "src": "assets/extra_opts/TAllsite_WithSpinup_combined_V1/FR-Gri_flux/gppt_FR-Gri_flux_TAllsite_WithSpinup_combined_V1_prior_post_from_nc.png",
+            "category": "FR-Gri_flux"
+          },
+          {
+            "name": "neet_FR-Gri_flux_TAllsite_WithSpinup_combined_V1_prior_post_from_nc.png",
+            "src": "assets/extra_opts/TAllsite_WithSpinup_combined_V1/FR-Gri_flux/neet_FR-Gri_flux_TAllsite_WithSpinup_combined_V1_prior_post_from_nc.png",
+            "category": "FR-Gri_flux"
+          }
+        ],
+        "FR-Lam_flux": [
+          {
+            "name": "fluxlat_FR-Lam_flux_TAllsite_WithSpinup_combined_V1_prior_post_from_nc.png",
+            "src": "assets/extra_opts/TAllsite_WithSpinup_combined_V1/FR-Lam_flux/fluxlat_FR-Lam_flux_TAllsite_WithSpinup_combined_V1_prior_post_from_nc.png",
+            "category": "FR-Lam_flux"
+          },
+          {
+            "name": "fluxsens_FR-Lam_flux_TAllsite_WithSpinup_combined_V1_prior_post_from_nc.png",
+            "src": "assets/extra_opts/TAllsite_WithSpinup_combined_V1/FR-Lam_flux/fluxsens_FR-Lam_flux_TAllsite_WithSpinup_combined_V1_prior_post_from_nc.png",
+            "category": "FR-Lam_flux"
+          },
+          {
+            "name": "gppt_FR-Lam_flux_TAllsite_WithSpinup_combined_V1_prior_post_from_nc.png",
+            "src": "assets/extra_opts/TAllsite_WithSpinup_combined_V1/FR-Lam_flux/gppt_FR-Lam_flux_TAllsite_WithSpinup_combined_V1_prior_post_from_nc.png",
+            "category": "FR-Lam_flux"
+          },
+          {
+            "name": "neet_FR-Lam_flux_TAllsite_WithSpinup_combined_V1_prior_post_from_nc.png",
+            "src": "assets/extra_opts/TAllsite_WithSpinup_combined_V1/FR-Lam_flux/neet_FR-Lam_flux_TAllsite_WithSpinup_combined_V1_prior_post_from_nc.png",
+            "category": "FR-Lam_flux"
+          }
+        ],
+        "FR_Aur_bio": [
+          {
+            "name": "agb_FR_Aur_bio_TAllsite_WithSpinup_combined_V1_prior_post_from_nc.png",
+            "src": "assets/extra_opts/TAllsite_WithSpinup_combined_V1/FR_Aur_bio/agb_FR_Aur_bio_TAllsite_WithSpinup_combined_V1_prior_post_from_nc.png",
+            "category": "FR_Aur_bio"
+          },
+          {
+            "name": "lai_stics_FR_Aur_bio_TAllsite_WithSpinup_combined_V1_prior_post_from_nc.png",
+            "src": "assets/extra_opts/TAllsite_WithSpinup_combined_V1/FR_Aur_bio/lai_stics_FR_Aur_bio_TAllsite_WithSpinup_combined_V1_prior_post_from_nc.png",
+            "category": "FR_Aur_bio"
+          }
+        ],
+        "FR_Gri_bio": [
+          {
+            "name": "agb_FR_Gri_bio_TAllsite_WithSpinup_combined_V1_prior_post_from_nc.png",
+            "src": "assets/extra_opts/TAllsite_WithSpinup_combined_V1/FR_Gri_bio/agb_FR_Gri_bio_TAllsite_WithSpinup_combined_V1_prior_post_from_nc.png",
+            "category": "FR_Gri_bio"
+          },
+          {
+            "name": "lai_stics_FR_Gri_bio_TAllsite_WithSpinup_combined_V1_prior_post_from_nc.png",
+            "src": "assets/extra_opts/TAllsite_WithSpinup_combined_V1/FR_Gri_bio/lai_stics_FR_Gri_bio_TAllsite_WithSpinup_combined_V1_prior_post_from_nc.png",
+            "category": "FR_Gri_bio"
+          }
+        ],
+        "FR_Lam_bio": [
+          {
+            "name": "agb_FR_Lam_bio_TAllsite_WithSpinup_combined_V1_prior_post_from_nc.png",
+            "src": "assets/extra_opts/TAllsite_WithSpinup_combined_V1/FR_Lam_bio/agb_FR_Lam_bio_TAllsite_WithSpinup_combined_V1_prior_post_from_nc.png",
+            "category": "FR_Lam_bio"
+          },
+          {
+            "name": "lai_stics_FR_Lam_bio_TAllsite_WithSpinup_combined_V1_prior_post_from_nc.png",
+            "src": "assets/extra_opts/TAllsite_WithSpinup_combined_V1/FR_Lam_bio/lai_stics_FR_Lam_bio_TAllsite_WithSpinup_combined_V1_prior_post_from_nc.png",
+            "category": "FR_Lam_bio"
+          }
+        ]
+      }
+    },
+    "TAllsite_WithSpinup_combined_V2": {
+      "name": "TAllsite_WithSpinup_combined_V2",
+      "type": "extra_opt",
+      "folder": "TAllsite_WithSpinup_combined_V2",
+      "plots": {
+        "BE-Lon_flux": [
+          {
+            "name": "gppt_BE-Lon_flux_TAllsite_WithSpinup_combined_V2_prior_post_from_nc.png",
+            "src": "assets/extra_opts/TAllsite_WithSpinup_combined_V2/BE-Lon_flux/gppt_BE-Lon_flux_TAllsite_WithSpinup_combined_V2_prior_post_from_nc.png",
+            "category": "BE-Lon_flux"
+          }
+        ],
+        "DE-Kli_flux": [
+          {
+            "name": "gppt_DE-Kli_flux_TAllsite_WithSpinup_combined_V2_prior_post_from_nc.png",
+            "src": "assets/extra_opts/TAllsite_WithSpinup_combined_V2/DE-Kli_flux/gppt_DE-Kli_flux_TAllsite_WithSpinup_combined_V2_prior_post_from_nc.png",
+            "category": "DE-Kli_flux"
+          }
+        ],
+        "FR-Aur_flux": [
+          {
+            "name": "gppt_FR-Aur_flux_TAllsite_WithSpinup_combined_V2_prior_post_from_nc.png",
+            "src": "assets/extra_opts/TAllsite_WithSpinup_combined_V2/FR-Aur_flux/gppt_FR-Aur_flux_TAllsite_WithSpinup_combined_V2_prior_post_from_nc.png",
+            "category": "FR-Aur_flux"
+          }
+        ],
+        "FR-Gri_flux": [
+          {
+            "name": "gppt_FR-Gri_flux_TAllsite_WithSpinup_combined_V2_prior_post_from_nc.png",
+            "src": "assets/extra_opts/TAllsite_WithSpinup_combined_V2/FR-Gri_flux/gppt_FR-Gri_flux_TAllsite_WithSpinup_combined_V2_prior_post_from_nc.png",
+            "category": "FR-Gri_flux"
+          }
+        ],
+        "FR-Lam_flux": [
+          {
+            "name": "gppt_FR-Lam_flux_TAllsite_WithSpinup_combined_V2_prior_post_from_nc.png",
+            "src": "assets/extra_opts/TAllsite_WithSpinup_combined_V2/FR-Lam_flux/gppt_FR-Lam_flux_TAllsite_WithSpinup_combined_V2_prior_post_from_nc.png",
+            "category": "FR-Lam_flux"
+          }
+        ]
+      }
     }
   }
 };
-const CATEGORIES = [
+const PRIOR_CATEGORIES = [
   {
     "key": "ensemble_LHF_GPP",
     "label": "Ensemble LHF/GPP"
@@ -1043,8 +1232,9 @@ const CATEGORIES = [
   }
 ];
 
-let currentSite = Object.keys(DATA)[0];
-let currentCategory = CATEGORIES[0].key;
+let currentMode = "sites";
+let currentItem = Object.keys(DATA.sites)[0];
+let currentCategory = PRIOR_CATEGORIES[0].key;
 
 const map = L.map("map").setView([47.2, 4.5], 5);
 
@@ -1056,50 +1246,81 @@ L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
 const markers = {};
 
 function initMap() {
-    for (const [site, meta] of Object.entries(DATA)) {
+    for (const [site, meta] of Object.entries(DATA.sites)) {
         const marker = L.marker([meta.lat, meta.lon]).addTo(map);
-        marker.bindPopup(`<b>${site}</b><br>${meta.folder}<br><button onclick="selectSite('${site}')">Open plots</button>`);
-        marker.on("click", () => selectSite(site));
+        marker.bindPopup(`<b>${site}</b><br>${meta.folder}<br><button onclick="selectPriorSite('${site}')">Open plots</button>`);
+        marker.on("click", () => selectPriorSite(site));
         markers[site] = marker;
     }
 }
 
-function initSiteButtons() {
-    const container = document.getElementById("siteButtons");
-    container.innerHTML = "";
+function initButtons() {
+    const siteBox = document.getElementById("siteButtons");
+    siteBox.innerHTML = "";
 
-    for (const site of Object.keys(DATA)) {
+    for (const site of Object.keys(DATA.sites)) {
         const btn = document.createElement("button");
         btn.className = "site-button";
-        btn.id = "btn-" + site;
+        btn.id = "btn-sites-" + site;
         btn.innerText = site;
-        btn.onclick = () => selectSite(site);
-        container.appendChild(btn);
+        btn.onclick = () => selectPriorSite(site);
+        siteBox.appendChild(btn);
+    }
+
+    const extraBox = document.getElementById("extraButtons");
+    extraBox.innerHTML = "";
+
+    for (const opt of Object.keys(DATA.extra_opts)) {
+        const btn = document.createElement("button");
+        btn.className = "site-button extra-button";
+        btn.id = "btn-extra-" + opt;
+        btn.innerText = opt;
+        btn.onclick = () => selectExtraOpt(opt);
+        extraBox.appendChild(btn);
     }
 }
 
-function selectSite(site) {
-    currentSite = site;
+function selectPriorSite(site) {
+    currentMode = "sites";
+    currentItem = site;
+    currentCategory = PRIOR_CATEGORIES[0].key;
     document.getElementById("searchBox").value = "";
 
-    const meta = DATA[site];
+    const meta = DATA.sites[site];
     map.setView([meta.lat, meta.lon], 8);
-
-    if (markers[site]) {
-        markers[site].openPopup();
-    }
+    if (markers[site]) markers[site].openPopup();
 
     render();
+}
+
+function selectExtraOpt(opt) {
+    currentMode = "extra_opts";
+    currentItem = opt;
+    currentCategory = Object.keys(DATA.extra_opts[opt].plots)[0];
+    document.getElementById("searchBox").value = "";
+    render();
+}
+
+function getCurrentData() {
+    return DATA[currentMode][currentItem];
+}
+
+function getCategories() {
+    if (currentMode === "sites") {
+        return PRIOR_CATEGORIES;
+    }
+
+    return Object.keys(getCurrentData().plots).map(k => ({key: k, label: k}));
 }
 
 function renderTabs() {
     const tabs = document.getElementById("tabs");
     tabs.innerHTML = "";
 
-    for (const catObj of CATEGORIES) {
+    for (const catObj of getCategories()) {
         const cat = catObj.key;
         const label = catObj.label;
-        const n = DATA[currentSite].plots[cat] ? DATA[currentSite].plots[cat].length : 0;
+        const n = getCurrentData().plots[cat] ? getCurrentData().plots[cat].length : 0;
 
         const btn = document.createElement("button");
         btn.className = "tab" + (cat === currentCategory ? " active" : "");
@@ -1112,11 +1333,17 @@ function renderTabs() {
     }
 }
 
-function renderSiteButtons() {
-    for (const site of Object.keys(DATA)) {
-        const btn = document.getElementById("btn-" + site);
+function renderButtons() {
+    for (const site of Object.keys(DATA.sites)) {
+        const btn = document.getElementById("btn-sites-" + site);
         if (!btn) continue;
-        btn.className = "site-button" + (site === currentSite ? " active" : "");
+        btn.className = "site-button" + (currentMode === "sites" && site === currentItem ? " active" : "");
+    }
+
+    for (const opt of Object.keys(DATA.extra_opts)) {
+        const btn = document.getElementById("btn-extra-" + opt);
+        if (!btn) continue;
+        btn.className = "site-button extra-button" + (currentMode === "extra_opts" && opt === currentItem ? " active" : "");
     }
 }
 
@@ -1124,14 +1351,14 @@ function renderPlots() {
     const container = document.getElementById("plots");
     const search = document.getElementById("searchBox").value.toLowerCase().trim();
 
-    let plots = DATA[currentSite].plots[currentCategory] || [];
+    let plots = getCurrentData().plots[currentCategory] || [];
 
     if (search) {
         plots = plots.filter(p => p.name.toLowerCase().includes(search));
     }
 
     if (!plots.length) {
-        container.innerHTML = `<div class="empty">No plots found for ${currentSite} / ${currentCategory}.</div>`;
+        container.innerHTML = `<div class="empty">No plots found.</div>`;
         return;
     }
 
@@ -1151,14 +1378,16 @@ function renderPlots() {
 }
 
 function render() {
-    const meta = DATA[currentSite];
+    const meta = getCurrentData();
 
-    document.getElementById("siteTitle").innerText = currentSite;
+    document.getElementById("siteTitle").innerText = meta.name;
     document.getElementById("siteSubtitle").innerText =
-        `${meta.folder} | lat ${meta.lat}, lon ${meta.lon}`;
+        currentMode === "sites"
+        ? `${meta.folder} | lat ${meta.lat}, lon ${meta.lon}`
+        : `Extra optimization folder: ${meta.folder}`;
 
     renderTabs();
-    renderSiteButtons();
+    renderButtons();
     renderPlots();
 }
 
@@ -1172,9 +1401,8 @@ function closeModal() {
 }
 
 initMap();
-initSiteButtons();
+initButtons();
 render();
 </script>
-
 </body>
 </html>
